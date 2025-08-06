@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InfoHealth AI – General Medicine</title>
-  <link rel="icon" href="public/infohealth-logo.png" />
+  <link rel="icon" href="infohealth-logo.png" />
   <style>
     * { box-sizing: border-box; }
     
@@ -436,25 +436,16 @@
     }
 
     .btn-secondary {
-      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+      background: #6B7280;
     }
 
     .btn-secondary:hover {
-      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      background: #4B5563;
     }
 
     .home-btn {
       margin-left: 0.6rem;
-      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+      background: #6B7280;
       color: white;
       border: none;
       padding: 0.6rem 1rem;
@@ -462,11 +453,11 @@
       cursor: pointer;
       font-weight: 500;
       font-size: 0.9rem;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
     }
 
     .home-btn:hover {
-      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      background: #4B5563;
     }
 
     .health-card {
@@ -554,25 +545,13 @@
         grid-template-columns: 1fr 1fr;
         gap: 5px;
       }
-      
-      .health-reading-grid {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-      }
-      
-      .health-reading-grid input,
-      .health-reading-grid select,
-      .health-reading-grid button {
-        width: 100%;
-        margin-bottom: 10px;
-      }
     }
   </style>
 </head>
 <body>
   <!-- Splash Screen -->
   <div class="splash-screen" id="splashScreen">
-    <img src="public/infohealth-logo.png" alt="InfoHealth AI Logo" class="splash-logo">
+    <img src="infohealth-logo.png" alt="InfoHealth AI Logo" class="splash-logo">
     <h1 class="splash-title">InfoHealth AI</h1>
     <p class="splash-subtitle">Your Intelligent Health Companion</p>
     <div class="splash-loader"></div>
@@ -584,7 +563,7 @@
     <div class="mobile-frame">
     <div class="wrapper">
       <div class="header">
-        <img src="public/medical-logo.jpg" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
+        <img src="infohealth-logo.png" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
       </div>
 
       <div class="cards-container">
@@ -633,7 +612,7 @@
       
       <div class="form-group">
         <label>Quick Health Reading Entry:</label>
-        <div class="health-reading-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;">
           <input type="text" id="readingValue" placeholder="Reading (e.g., 140/90)">
           <select id="readingType">
             <option value="Blood Pressure">Blood Pressure</option>
@@ -643,7 +622,6 @@
           </select>
           <input type="datetime-local" id="readingTime">
           <button class="btn" onclick="addHealthReading()">Add</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
         </div>
       </div>
 
@@ -656,12 +634,10 @@
         <h4>Health Goals This Week</h4>
         <div class="form-group">
           <input type="text" id="newGoal" placeholder="Add a health goal...">
-          <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn" onclick="addHealthGoal()">Add Goal</button>
-            <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-          </div>
+          <button class="btn" onclick="addHealthGoal()">Add Goal</button>
         </div>
         <div id="healthGoals"></div>
+        <button class="btn-secondary" onclick="goHome()" style="margin-top: 15px;">🏠 Back to Home</button>
       </div>
     </div>
   </div>
@@ -728,10 +704,8 @@
         </div>
       </div>
 
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn" onclick="saveHealthInfo()">Save Information</button>
-        <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-      </div>
+      <button class="btn" onclick="saveHealthInfo()">Save Information</button>
+      <button class="btn-secondary" onclick="goHome()">🏠 Back to Home</button>
     </div>
   </div>
 
@@ -771,10 +745,7 @@
           <label>Notes/Reason:</label>
           <textarea id="appointmentNotes" placeholder="Reason for visit, questions to ask, etc."></textarea>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-        </div>
+        <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
       </div>
 
       <div class="health-card">
@@ -785,6 +756,7 @@
       <div class="health-card">
         <h4>Past Appointments</h4>
         <div id="pastAppointments"></div>
+        <button class="btn-secondary" onclick="goHome()" style="margin-top: 15px;">🏠 Back to Home</button>
       </div>
     </div>
   </div>
@@ -835,10 +807,7 @@
           <label>Notes/Instructions:</label>
           <textarea id="medicationNotes" placeholder="Take with food, side effects, etc."></textarea>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button class="btn" onclick="addMedication()">Add Medication</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-        </div>
+        <button class="btn" onclick="addMedication()">Add Medication</button>
       </div>
 
       <div class="health-card">
@@ -851,6 +820,7 @@
         <div id="medicationReminders">
           <p><strong>💡 Tip:</strong> Set phone alarms for your medication times!</p>
         </div>
+        <button class="btn-secondary" onclick="goHome()" style="margin-top: 15px;">🏠 Back to Home</button>
       </div>
     </div>
   </div>
@@ -907,8 +877,8 @@
       wrap.className = 'bubble-wrapper ' + role;
 
       const avatar = role === 'user' 
-        ? 'public/infohealth-user-logo.png'
-        : 'public/infohealth-logo-small.png';
+        ? 'infohealth-user-logo.png'
+        : 'infohealth-logo-small.png';
 
       wrap.innerHTML = '<div class="avatar"><img src="' + avatar + '" alt="' + role + '" /></div><div class="message"></div>';
       
@@ -943,436 +913,419 @@
       }
     }
 
-    // Conversation context tracking
-    let conversationContext = {
-      lastTopic: null,
-      questionCount: 0,
-      userInterests: []
-    };
-
-    // Enhanced smart response system
-    function getSmartResponse(query) {
-      const disclaimer = '<div style="background-color: #f0f8ff; border-left: 4px solid #DAA520; padding: 10px; margin-bottom: 15px; font-weight: bold; color: #2c5aa0;">⚠️ Consult healthcare professionals for medical advice.</div>';
-      const q = query.toLowerCase();
-      
-      // Track conversation
-      conversationContext.questionCount++;
-      
-      // Personal questions get personalized responses
-      if (q.includes('my ') || q.includes('i have') || q.includes('should i') || q.includes('i am')) {
-        return getPersonalAdvice(query, disclaimer);
-      }
-      
-      // Detailed questions get comprehensive explanations
-      if (q.includes('tell me more') || q.includes('explain') || q.includes('how does') || q.includes('why') || q.includes('what causes')) {
-        return getDetailedExplanation(query, disclaimer);
-      }
-      
-      // Symptom questions get assessment
-      if (q.includes('symptom') || q.includes('feeling') || q.includes('pain') || q.includes('hurt')) {
-        return getSymptomAssessment(query, disclaimer);
-      }
-      
-      // Treatment questions get options
-      if (q.includes('treat') || q.includes('help') || q.includes('medication') || q.includes('cure')) {
-        return getTreatmentOptions(query, disclaimer);
-      }
-      
-      // Default to enhanced response based on topic
-      return getEnhancedTopicResponse(query, disclaimer);
-    }
-
-    // Personal advice responses
-    function getPersonalAdvice(query, disclaimer) {
-      const q = query.toLowerCase();
-      
-      if (q.includes('diabetes') || q.includes('blood sugar')) {
-        return disclaimer + `<strong>🎯 PERSONALIZED DIABETES GUIDANCE</strong><br><br>
-          Since you're asking about your personal situation, here's targeted advice:<br><br>
-          
-          <strong>If Your Blood Sugar is High (>180 mg/dL):</strong><ul>
-          <li><strong>Immediate Steps:</strong> Drink water, avoid simple carbs, light walking if able</li>
-          <li><strong>Check for Ketones:</strong> If >300 mg/dL, test urine ketones</li>
-          <li><strong>Call Doctor If:</strong> Vomiting, severe fatigue, fruity breath smell</li>
-          <li><strong>Medication Timing:</strong> Don't double-dose, follow your prescribed schedule</li></ul><br>
-          
-          <strong>Daily Management Strategies:</strong><ul>
-          <li><strong>Meal Planning:</strong> 45-60g carbs per meal, consistent timing</li>
-          <li><strong>Exercise Window:</strong> 1-3 hours after meals for best blood sugar impact</li>
-          <li><strong>Stress Impact:</strong> High stress raises blood sugar - try 10-minute breathing exercises</li>
-          <li><strong>Sleep Quality:</strong> Poor sleep increases insulin resistance</li></ul><br>
-          
-          <strong>📱 Track These Daily:</strong> Blood sugar before/after meals, medication times, physical activity, stress levels<br><br>
-          
-          <div style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 10px 0;">
-          <strong>💡 Personal Tip:</strong> Based on your question, consider logging your patterns for 1 week to share with your doctor.
-          </div>`;
-      }
-      
-      if (q.includes('blood pressure') || q.includes('hypertension')) {
-        return disclaimer + `<strong>🩸 YOUR BLOOD PRESSURE MANAGEMENT PLAN</strong><br><br>
-          
-          <strong>If Your Reading is High (>140/90):</strong><ul>
-          <li><strong>Recheck Properly:</strong> Sit quietly 5 minutes, feet flat, arm supported</li>
-          <li><strong>Take 2-3 Readings:</strong> 1 minute apart, average the results</li>
-          <li><strong>Consider Timing:</strong> Avoid caffeine, exercise, stress before measuring</li>
-          <li><strong>Emergency Signs:</strong> >180/120 with headache, chest pain, or vision changes = Call 911</li></ul><br>
-          
-          <strong>Immediate Lifestyle Adjustments:</strong><ul>
-          <li><strong>Salt Reduction:</strong> Aim for <2300mg daily (read all food labels)</li>
-          <li><strong>Walking Program:</strong> Start with 10 minutes after meals</li>
-          <li><strong>Weight Management:</strong> Even 5-10 pound loss can lower BP significantly</li>
-          <li><strong>Alcohol Limit:</strong> Maximum 1 drink/day (women), 2/day (men)</li></ul><br>
-          
-          <strong>📊 Your Monitoring Schedule:</strong><ul>
-          <li><strong>Daily:</strong> Same time each morning, log results</li>
-          <li><strong>Weekly:</strong> Review patterns, note triggers</li>
-          <li><strong>Monthly:</strong> Share log with your doctor</li></ul>`;
-      }
-      
-      if (q.includes('heart') || q.includes('chest') || q.includes('cardiac')) {
-        return disclaimer + `<strong>❤️ PERSONAL HEART HEALTH MANAGEMENT</strong><br><br>
-          
-          <strong>If You're Experiencing Chest Discomfort:</strong><ul>
-          <li><strong>Call 911 If:</strong> Pain lasts >5 minutes, spreads to arm/jaw, with sweating/nausea</li>
-          <li><strong>Monitor Closely:</strong> Brief chest tightness with exertion may be angina</li>
-          <li><strong>Track Triggers:</strong> Note when symptoms occur (activity, stress, time of day)</li>
-          <li><strong>Medication Response:</strong> How do symptoms respond to rest or nitroglycerin?</li></ul><br>
-          
-          <strong>Your Daily Heart Protection Plan:</strong><ul>
-          <li><strong>Morning Routine:</strong> Take medications with first glass of water</li>
-          <li><strong>Exercise Safely:</strong> Start slow, stop if chest discomfort or severe breathlessness</li>
-          <li><strong>Stress Management:</strong> Practice deep breathing when you feel overwhelmed</li>
-          <li><strong>Diet Focus:</strong> Limit sodium to <2000mg daily, emphasize omega-3 fatty fish</li></ul>`;
-      }
-      
-      return disclaimer + `<strong>🎯 PERSONALIZED HEALTH GUIDANCE</strong><br><br>
-        Based on your personal question, here are specific steps you can take:<br><br>
-        <strong>Immediate Actions:</strong> Monitor your symptoms and track patterns<br>
-        <strong>Daily Habits:</strong> Focus on medication compliance and lifestyle modifications<br>
-        <strong>When to Seek Help:</strong> Contact your doctor if symptoms worsen or new concerns arise<br>
-        <strong>Tracking Suggestions:</strong> Keep a daily log to share with your healthcare provider`;
-    }
-
-    // Detailed explanations
-    function getDetailedExplanation(query, disclaimer) {
-      const q = query.toLowerCase();
-      
-      if (q.includes('diabetes')) {
-        return disclaimer + `<strong>🔬 COMPREHENSIVE DIABETES EXPLANATION</strong><br><br>
-          
-          <strong>What Actually Happens in Your Body:</strong><br>
-          Diabetes occurs when your body can't properly use glucose (sugar) for energy. Think of insulin as a "key" that unlocks your cells to let glucose in.<br><br>
-          
-          <strong>Type 1 Diabetes (Autoimmune):</strong><ul>
-          <li><strong>The Attack:</strong> Your immune system mistakenly destroys insulin-producing beta cells in your pancreas</li>
-          <li><strong>Genetic Component:</strong> Specific genes (HLA-DR, HLA-DQ) increase risk, but environment triggers it</li>
-          <li><strong>Rapid Onset:</strong> Symptoms develop quickly - often weeks to months</li>
-          <li><strong>No Prevention:</strong> Currently no way to prevent Type 1</li></ul><br>
-          
-          <strong>Type 2 Diabetes (Metabolic):</strong><ul>
-          <li><strong>Insulin Resistance:</strong> Your cells become "deaf" to insulin's signals</li>
-          <li><strong>Pancreas Overwork:</strong> Makes more insulin to compensate, eventually burns out</li>
-          <li><strong>Progressive Disease:</strong> Develops over years, often undiagnosed for long periods</li>
-          <li><strong>Lifestyle Impact:</strong> Diet, exercise, weight significantly affect progression</li></ul><br>
-          
-          <strong>How High Blood Sugar Damages Your Body:</strong><ul>
-          <li><strong>Glycation:</strong> Glucose sticks to proteins, creating harmful compounds (AGEs)</li>
-          <li><strong>Blood Vessel Damage:</strong> High glucose damages artery walls, leading to heart disease</li>
-          <li><strong>Nerve Damage:</strong> High glucose disrupts nerve signals, causing neuropathy</li>
-          <li><strong>Kidney Stress:</strong> Overworks filtering systems, leading to kidney disease</li></ul><br>
-          
-          <strong>Why Blood Sugar Swings Happen:</strong><br>
-          Your blood sugar is affected by: food timing and type, physical activity, stress hormones, sleep quality, illness, and medications. Even small changes in routine can cause fluctuations.`;
-      }
-      
-      if (q.includes('blood pressure') || q.includes('hypertension')) {
-        return disclaimer + `<strong>🔬 HOW HIGH BLOOD PRESSURE DAMAGES YOUR BODY</strong><br><br>
-          
-          <strong>The Mechanism of Damage:</strong><br>
-          High blood pressure is called the "silent killer" because it damages organs gradually over years.<br><br>
-          
-          <strong>Arterial Wall Changes:</strong><ul>
-          <li><strong>Endothelial Damage:</strong> High pressure creates microscopic tears in artery lining</li>
-          <li><strong>Smooth Muscle Hypertrophy:</strong> Artery walls thicken to resist pressure</li>
-          <li><strong>Arterial Stiffening:</strong> Loss of elastin, increased collagen deposition</li>
-          <li><strong>Atherosclerosis Acceleration:</strong> Damaged areas become sites for plaque formation</li></ul><br>
-          
-          <strong>Heart Damage (Left Ventricular Hypertrophy):</strong><ul>
-          <li><strong>Compensatory Thickening:</strong> Heart muscle grows to pump against high pressure</li>
-          <li><strong>Diastolic Dysfunction:</strong> Thick heart can't relax properly between beats</li>
-          <li><strong>Reduced Coronary Reserve:</strong> Thicker muscle needs more oxygen, but supply limited</li>
-          <li><strong>Arrhythmia Risk:</strong> Electrical conduction changes in thick muscle</li></ul><br>
-          
-          <strong>Kidney Damage (Hypertensive Nephrosclerosis):</strong><ul>
-          <li><strong>Afferent Arteriole Sclerosis:</strong> Small kidney arteries harden</li>
-          <li><strong>Glomerular Damage:</strong> Filtering units become scarred</li>
-          <li><strong>Reduced GFR:</strong> Kidney function gradually declines</li>
-          <li><strong>Proteinuria:</strong> Damaged kidneys leak protein</li></ul>`;
-      }
-      
-      return disclaimer + `<strong>🧠 DETAILED MEDICAL EXPLANATION</strong><br><br>
-        Here's the comprehensive science behind your question...<br><br>
-        <strong>Biological Mechanisms:</strong> Understanding how your body processes work<br>
-        <strong>Risk Factors:</strong> What increases your chances of developing conditions<br>
-        <strong>Disease Progression:</strong> How conditions develop and worsen over time<br>
-        <strong>Treatment Rationale:</strong> Why specific treatments are effective`;
-    }
-
-    // Symptom assessment
-    function getSymptomAssessment(query, disclaimer) {
-      return disclaimer + `<strong>🩺 SYMPTOM ASSESSMENT & ACTION PLAN</strong><br><br>
-        
-        <strong>🚨 CALL 911 IMMEDIATELY IF:</strong><ul>
-        <li>Chest pain lasting >5 minutes with sweating, nausea, or shortness of breath</li>
-        <li>Difficulty breathing or speaking in full sentences</li>
-        <li>Severe confusion, loss of consciousness, or seizures</li>
-        <li>Blood sugar >400 mg/dL with vomiting or severe dehydration</li>
-        <li>Blood pressure >180/120 with headache, vision changes, or chest pain</li></ul><br>
-        
-        <strong>📞 CALL DOCTOR SAME DAY IF:</strong><ul>
-        <li>New or worsening symptoms that concern you</li>
-        <li>Blood pressure consistently >160/100</li>
-        <li>Blood sugar consistently >300 mg/dL</li>
-        <li>Medication side effects affecting daily activities</li>
-        <li>Swelling in legs, ankles, or difficulty breathing when lying flat</li></ul><br>
-        
-        <strong>📅 SCHEDULE APPOINTMENT IF:</strong><ul>
-        <li>Gradual changes in energy, appetite, or sleep patterns</li>
-        <li>Questions about medication effectiveness</li>
-        <li>Need for preventive care or screening tests</li>
-        <li>Lifestyle changes affecting your condition</li></ul><br>
-        
-        <strong>📝 SYMPTOM TRACKING TIPS:</strong><ul>
-        <li>Note time of day, triggers, severity (1-10 scale)</li>
-        <li>Track what makes symptoms better or worse</li>
-        <li>Record any medication taken and response</li>
-        <li>Keep log to share with healthcare provider</li></ul>`;
-    }
-
-    // Treatment options
-    function getTreatmentOptions(query, disclaimer) {
-      const q = query.toLowerCase();
-      
-      if (q.includes('diabetes')) {
-        return disclaimer + `<strong>💊 DIABETES TREATMENT OPTIONS EXPLAINED</strong><br><br>
-          
-          <strong>Type 1 Diabetes Treatment:</strong><ul>
-          <li><strong>Insulin Therapy:</strong> Essential for survival - multiple daily injections or insulin pump</li>
-          <li><strong>Rapid-Acting Insulin:</strong> Taken with meals (Humalog, Novolog, Apidra)</li>
-          <li><strong>Long-Acting Insulin:</strong> Provides baseline coverage (Lantus, Levemir, Tresiba)</li>
-          <li><strong>Continuous Glucose Monitoring:</strong> Real-time blood sugar tracking</li></ul><br>
-          
-          <strong>Type 2 Diabetes Treatment Progression:</strong><ul>
-          <li><strong>First-Line: Metformin</strong> - Reduces glucose production by liver</li>
-          <li><strong>Second-Line: SGLT2 Inhibitors</strong> - Help kidneys remove excess glucose</li>
-          <li><strong>Third-Line: GLP-1 Agonists</strong> - Slow digestion, reduce appetite</li>
-          <li><strong>Insulin:</strong> Added when other medications insufficient</li></ul><br>
-          
-          <strong>Natural Treatment Approaches:</strong><ul>
-          <li><strong>Dietary Changes:</strong> Low-carb or Mediterranean diet patterns</li>
-          <li><strong>Physical Activity:</strong> 150 minutes/week moderate exercise</li>
-          <li><strong>Weight Management:</strong> 5-10% weight loss can significantly improve control</li>
-          <li><strong>Stress Reduction:</strong> Chronic stress raises blood sugar levels</li></ul>`;
-      }
-      
-      return disclaimer + `<strong>🎯 TREATMENT OPTIONS OVERVIEW</strong><br><br>
-        <strong>Medication Approaches:</strong> Evidence-based pharmaceutical treatments<br>
-        <strong>Lifestyle Interventions:</strong> Diet, exercise, and behavior modifications<br>
-        <strong>Combination Therapy:</strong> Using multiple approaches for optimal results<br>
-        <strong>Alternative Options:</strong> Complementary treatments to discuss with your doctor`;
-    }
-
-    // Enhanced topic responses
-    function getEnhancedTopicResponse(query, disclaimer) {
-      const q = query.toLowerCase();
-      
-      if (q.includes('diabetes') || q.includes('blood sugar')) {
-        return disclaimer + `<strong>📊 COMPREHENSIVE DIABETES INFORMATION</strong><br><br>
-          Diabetes affects how your body processes glucose, the main source of energy for your cells.<br><br>
-          
-          <strong>Key Points to Understand:</strong><ul>
-          <li><strong>Not Just About Sugar:</strong> Affects your entire cardiovascular system</li>
-          <li><strong>Progressive Condition:</strong> Can worsen over time without proper management</li>
-          <li><strong>Reversible Damage:</strong> Good control can prevent and even reverse some complications</li>
-          <li><strong>Individual Variation:</strong> Treatment plans must be personalized</li></ul><br>
-          
-          <strong>What You Can Control:</strong><ul>
-          <li><strong>Blood Sugar Levels:</strong> Through diet, exercise, and medications</li>
-          <li><strong>Risk Factors:</strong> Weight, activity level, stress management</li>
-          <li><strong>Complications:</strong> Regular monitoring and preventive care</li>
-          <li><strong>Quality of Life:</strong> Many people with diabetes live completely normal lives</li></ul>`;
-      }
-      
-      // Fall back to original comprehensive response
-      return getMedicalResponse(query);
-    }
-
-    // Enhanced comprehensive medical responses with natural language processing
     function getMedicalResponse(query) {
   const disclaimer = '<div style="background-color: #f0f8ff; border-left: 4px solid #DAA520; padding: 10px; margin-bottom: 15px; font-weight: bold; color: #2c5aa0;">⚠️ Consult healthcare professionals for medical advice.</div>';
   const queryLower = query.toLowerCase();
-  
-  // HYPERTENSION / BLOOD PRESSURE QUERIES
-  if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || 
-      queryLower.includes('high bp') || queryLower.includes('bp is high') ||
-      queryLower.includes('pressure medication') || queryLower.includes('systolic') ||
-      queryLower.includes('diastolic') || queryLower.includes('lower blood pressure') ||
-      queryLower.includes('reduce blood pressure') || queryLower.includes('bp medication') ||
-      queryLower.includes('blood pressure natural') || queryLower.includes('bp reading') ||
-      queryLower.includes('pressure check') || queryLower.includes('pressure management') ||
-      queryLower.includes('ace inhibitor') || queryLower.includes('beta blocker') ||
-      queryLower.includes('diuretic') || queryLower.includes('calcium channel') ||
-      queryLower.includes('sodium intake') || queryLower.includes('salt') ||
-      (queryLower.includes('my') && queryLower.includes('pressure') && queryLower.includes('high'))) {
+
+  // ========== HYPERTENSION CARD ==========
+  if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || queryLower.includes('high bp')) {
+    return disclaimer + `
+    <img src="infohealth-professional-1.jpg" alt="Hypertension Management" class="medical-image">
     
-    return disclaimer + '<img src="medical-professional-1.jpg" alt="Blood Pressure Management" class="medical-image"><br><strong>COMPREHENSIVE HYPERTENSION MANAGEMENT GUIDE</strong><br><br><strong>Blood Pressure Classification (2017 AHA/ACC Guidelines):</strong><br><br><ul><li><strong>Normal:</strong> Less than 120/80 mmHg</li><li><strong>Elevated:</strong> Systolic 120-129 AND diastolic less than 80 mmHg</li><li><strong>Stage 1 Hypertension:</strong> Systolic 130-139 OR diastolic 80-89 mmHg</li><li><strong>Stage 2 Hypertension:</strong> Systolic 140/90 mmHg or higher</li><li><strong>Hypertensive Crisis:</strong> Systolic over 180 AND/OR diastolic over 120 mmHg (EMERGENCY - Call 911)</li></ul><br><strong>Natural Ways to Lower Blood Pressure:</strong><ul><li><strong>Diet:</strong> Reduce sodium to under 2.3g daily (1 teaspoon salt)</li><li><strong>Exercise:</strong> 150 minutes moderate activity weekly (brisk walking)</li><li><strong>Weight:</strong> Lose even 5-10 pounds if overweight</li><li><strong>Stress:</strong> Deep breathing, meditation, yoga</li><li><strong>Sleep:</strong> 7-9 hours nightly, treat sleep apnea</li><li><strong>Alcohol:</strong> Limit to 1 drink/day (women), 2 drinks/day (men)</li><li><strong>Quit Smoking:</strong> Smoking immediately raises BP</li></ul><br><strong>Common Blood Pressure Medications:</strong><ul><li><strong>ACE Inhibitors:</strong> Lisinopril, enalapril (end in -pril)</li><li><strong>ARBs:</strong> Losartan, valsartan (end in -sartan)</li><li><strong>Beta Blockers:</strong> Metoprolol, atenolol (end in -lol)</li><li><strong>Calcium Channel Blockers:</strong> Amlodipine, nifedipine</li><li><strong>Diuretics:</strong> Hydrochlorothiazide (HCTZ), chlorthalidone</li></ul><br><strong>🚨 WHEN TO CALL 911:</strong><ul><li>BP over 180/120 with symptoms</li><li>Severe headache with vision changes</li><li>Chest pain or shortness of breath</li><li>Numbness, weakness, trouble speaking</li><li>Severe nosebleeds with other symptoms</li></ul><br><strong>Home Monitoring Tips:</strong><ul><li>Check same time daily (morning preferred)</li><li>Sit quietly 5 minutes before measuring</li><li>Use properly sized cuff on bare arm</li><li>Take 2-3 readings, average them</li><li>Keep a log to share with your doctor</li></ul>';
+    <strong>HYPERTENSION: COMPLETE CLINICAL GUIDE</strong><br><br>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+      <div>
+        <strong>📊 Blood Pressure Classification (AHA 2023)</strong>
+        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
+          <tr style="background-color: #f2f2f2;"><th>Category</th><th>Systolic</th><th>Diastolic</th></tr>
+          <tr><td>Normal</td><td><120</td><td><80</td></tr>
+          <tr><td>Elevated</td><td>120-129</td><td><80</td></tr>
+          <tr><td>Stage 1</td><td>130-139</td><td>80-89</td></tr>
+          <tr><td>Stage 2</td><td>≥140</td><td>≥90</td></tr>
+          <tr style="background-color: #ffdddd;"><td>Crisis</td><td>>180</td><td>>120</td></tr>
+        </table>
+      </div>
+      <div>
+        <strong>💊 First-Line Medications</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>ACE Inhibitors:</strong> Lisinopril 10-40mg daily</li>
+          <li><strong>ARBs:</strong> Losartan 50-100mg daily</li>
+          <li><strong>CCBs:</strong> Amlodipine 5-10mg daily</li>
+          <li><strong>Thiazides:</strong> HCTZ 12.5-25mg daily</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>🌿 Evidence-Based Lifestyle Modifications</strong>
+    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ul>
+        <li><strong>DASH Diet:</strong> 8-10 servings fruits/vegetables daily (SBP↓ 8-14 mmHg)</li>
+        <li><strong>Na+ Restriction:</strong> <2.3g/day (ideal 1.5g) (SBP↓ 5-6 mmHg)</li>
+        <li><strong>Exercise:</strong> 150 mins/week moderate activity (SBP↓ 5-8 mmHg)</li>
+        <li><strong>Weight Loss:</strong> 5-10% reduction (SBP↓ 5-20 mmHg per 10kg)</li>
+      </ul>
+    </div>
+
+    <strong>🚨 Hypertensive Emergency</strong>
+    <div style="background-color: #fff3f5; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      BP >180/120 WITH end-organ damage:
+      <ul>
+        <li>Encephalopathy</li>
+        <li>Retinal hemorrhages</li>
+        <li>Pulmonary edema</li>
+        <li>Aortic dissection</li>
+      </ul>
+      <em>Requires ICU admission and IV antihypertensives</em>
+    </div>
+
+    <strong>📈 Home Monitoring Protocol</strong>
+    <ol style="margin: 10px 0; padding-left: 20px;">
+      <li>Rest 5 mins in chair with back support</li>
+      <li>Use validated upper-arm cuff</li>
+      <li>Take 2-3 readings 1 min apart (AM/PM)</li>
+      <li>Record all readings (not just averages)</li>
+      <li>Bring log to all appointments</li>
+    </ol>`;
   }
 
-  // CHOLESTEROL QUERIES
-  if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl') ||
-      queryLower.includes('triglyceride') || queryLower.includes('statin') || queryLower.includes('lipid') ||
-      queryLower.includes('atorvastatin') || queryLower.includes('simvastatin') || queryLower.includes('rosuvastatin') ||
-      queryLower.includes('crestor') || queryLower.includes('lipitor') || queryLower.includes('zocor') ||
-      queryLower.includes('cholesterol diet') || queryLower.includes('lower cholesterol') ||
-      queryLower.includes('cholesterol natural') || queryLower.includes('good cholesterol') ||
-      queryLower.includes('bad cholesterol') || queryLower.includes('cholesterol level') ||
-      queryLower.includes('cholesterol medication') || queryLower.includes('cholesterol side effects') ||
-      (queryLower.includes('my') && queryLower.includes('cholesterol') && queryLower.includes('high'))) {
+  // ========== CHOLESTEROL CARD ==========
+  if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl')) {
+    return disclaimer + `
+    <img src="infohealth-professional-2.jpg" alt="Cholesterol Management" class="medical-image">
     
-    return disclaimer + '<img src="public/medical-professional-2.png" alt="Cholesterol Management" class="medical-image"><br><strong>COMPREHENSIVE CHOLESTEROL MANAGEMENT</strong><br><br><strong>Understanding Your Cholesterol Numbers:</strong><ul><li><strong>Total Cholesterol:</strong> Less than 200 mg/dL (Optimal)</li><li><strong>LDL ("Bad") Cholesterol:</strong> Less than 100 mg/dL (less than 70 if high risk)</li><li><strong>HDL ("Good") Cholesterol:</strong> 40+ mg/dL (men), 50+ mg/dL (women)</li><li><strong>Triglycerides:</strong> Less than 150 mg/dL</li></ul><br><strong>Natural Ways to Lower Cholesterol:</strong><ul><li><strong>Soluble Fiber:</strong> Oats, beans, apples, barley (5-10g daily)</li><li><strong>Healthy Fats:</strong> Olive oil, avocados, nuts, fatty fish</li><li><strong>Plant Sterols:</strong> Fortified foods, supplements (2g daily)</li><li><strong>Exercise:</strong> 150 minutes weekly raises HDL, lowers LDL</li><li><strong>Weight Loss:</strong> Even 5-10 pounds improves cholesterol</li><li><strong>Limit Saturated Fat:</strong> Less than 7% of daily calories</li><li><strong>Avoid Trans Fats:</strong> Check labels for "partially hydrogenated"</li></ul><br><strong>Foods That Lower Cholesterol:</strong><ul><li><strong>Oatmeal & Oat Bran:</strong> Beta-glucan fiber</li><li><strong>Nuts:</strong> Almonds, walnuts, pistachios (1 oz daily)</li><li><strong>Fatty Fish:</strong> Salmon, mackerel, sardines (2x weekly)</li><li><strong>Beans & Legumes:</strong> High soluble fiber</li><li><strong>Eggplant & Okra:</strong> Low-calorie soluble fiber</li><li><strong>Fruits:</strong> Apples, grapes, strawberries, citrus</li></ul><br><strong>Statin Medications:</strong><ul><li><strong>Common Statins:</strong> Atorvastatin (Lipitor), Simvastatin (Zocor), Rosuvastatin (Crestor)</li><li><strong>Benefits:</strong> Reduce LDL 25-50%, prevent heart attacks/strokes</li><li><strong>Side Effects:</strong> Muscle pain (5-10%), liver enzyme elevation (rare)</li><li><strong>When to Take:</strong> Usually evening (cholesterol made at night)</li><li><strong>Monitoring:</strong> Liver tests at start, then as needed</li></ul><br><strong>🚨 EMERGENCY SIGNS:</strong><ul><li>Severe muscle pain with dark urine (rhabdomyolysis)</li><li>Unexplained muscle weakness</li><li>Triglycerides over 1000 mg/dL (pancreatitis risk)</li></ul><br><strong>Cholesterol Testing Schedule:</strong><ul><li><strong>Adults 20+:</strong> Every 5 years if normal</li><li><strong>High Risk:</strong> Every 6-12 months</li><li><strong>On Medication:</strong> 6-8 weeks after starting, then every 3-6 months</li></ul>';
+    <strong>LIPID MANAGEMENT: COMPLETE GUIDE</strong><br><br>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+      <div>
+        <strong>📊 Lipid Targets (ACC 2023)</strong>
+        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
+          <tr style="background-color: #f2f2f2;"><th>Parameter</th><th>Optimal</th><th>High Risk</th></tr>
+          <tr><td>LDL-C</td><td><100</td><td><70</td></tr>
+          <tr><td>Non-HDL-C</td><td><130</td><td><100</td></tr>
+          <tr><td>ApoB</td><td><90</td><td><65</td></tr>
+          <tr><td>Triglycerides</td><td><150</td><td><100</td></tr>
+        </table>
+      </div>
+      <div>
+        <strong>💊 Treatment Options</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>High-Intensity Statins:</strong> Atorvastatin 40-80mg (LDL↓ 50%)</li>
+          <li><strong>Ezetimibe:</strong> 10mg daily (LDL↓ 15-20%)</li>
+          <li><strong>PCSK9i:</strong> Evolocumab 140mg q2wk (LDL↓ 60%)</li>
+          <li><strong>Bempedoic Acid:</strong> 180mg daily (LDL↓ 25%)</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>🍽 Therapeutic Lifestyle Changes</strong>
+    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ul>
+        <li><strong>Soluble Fiber:</strong> 5-10g/day (LDL↓ 3-5%)</li>
+        <li><strong>Plant Sterols:</strong> 2g/day (LDL↓ 6-15%)</li>
+        <li><strong>Omega-3s:</strong> EPA+DHA 2-4g/day (TG↓ 20-40%)</li>
+        <li><strong>Exercise:</strong> 200-300 mins/week (HDL↑ 5-10%)</li>
+      </ul>
+    </div>
+
+    <strong>⚠️ Statin Intolerance Management</strong>
+    <div style="background-color: #fff8e6; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ol>
+        <li>Confirm true intolerance (muscle symptoms + CK elevation)</li>
+        <li>Try alternate statin (e.g., fluvastatin XL)</li>
+        <li>Consider every-other-day rosuvastatin</li>
+        <li>Non-statin alternatives if persistent</li>
+      </ol>
+    </div>
+
+    <strong>🔍 Screening Recommendations</strong>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+      <li><strong>All adults:</strong> Fasting lipid panel at least every 5 years</li>
+      <li><strong>High risk:</strong> Annual testing</li>
+      <li><strong>FH screening:</strong> LDL >190 mg/dL or premature CAD</li>
+    </ul>`;
   }
 
-  // HEART DISEASE QUERIES
-  if (queryLower.includes('heart disease') || queryLower.includes('heart attack') || queryLower.includes('cardiac') ||
-      queryLower.includes('coronary') || queryLower.includes('chest pain') || queryLower.includes('angina') ||
-      queryLower.includes('heart failure') || queryLower.includes('arrhythmia') || queryLower.includes('atrial fibrillation') ||
-      queryLower.includes('heart healthy') || queryLower.includes('cardiovascular') || queryLower.includes('heart medication') ||
-      queryLower.includes('aspirin') || queryLower.includes('blood thinner') || queryLower.includes('heart symptoms') ||
-      queryLower.includes('heart prevention') || queryLower.includes('heart risk') || queryLower.includes('heart diet') ||
-      queryLower.includes('heart rate') || queryLower.includes('palpitation') || queryLower.includes('shortness of breath') ||
-      queryLower.includes('fatigue') || queryLower.includes('swelling') || queryLower.includes('edema') ||
-      (queryLower.includes('chest') && queryLower.includes('pain')) ||
-      (queryLower.includes('heart') && (queryLower.includes('hurt') || queryLower.includes('problem')))) {
+  // ========== DIABETES CARD ==========
+  if (queryLower.includes('diabetes') || queryLower.includes('blood sugar') || queryLower.includes('a1c')) {
+    return disclaimer + `
+    <img src="infohealth-professional-4.jpg" alt="Diabetes Management" class="medical-image">
     
-    return disclaimer + '<img src="public/medical-professional-3.jpg" alt="Heart Disease Management" class="medical-image"><br><strong>COMPREHENSIVE HEART DISEASE MANAGEMENT</strong><br><br><strong>Types of Heart Disease:</strong><ul><li><strong>Coronary Artery Disease:</strong> Blocked arteries to heart muscle</li><li><strong>Heart Attack (MI):</strong> Complete blockage of heart artery</li><li><strong>Heart Failure:</strong> Heart can\'t pump effectively</li><li><strong>Arrhythmias:</strong> Irregular heart rhythms</li><li><strong>Valve Disease:</strong> Problems with heart valves</li></ul><br><strong>🚨 HEART ATTACK WARNING SIGNS - CALL 911:</strong><ul><li><strong>Chest Pain:</strong> Pressure, squeezing, fullness lasting 2+ minutes</li><li><strong>Pain Spreads To:</strong> Left arm, jaw, neck, back, stomach</li><li><strong>Other Symptoms:</strong> Shortness of breath, sweating, nausea</li><li><strong>Women May Have:</strong> Fatigue, indigestion, upper back pain</li><li><strong>Time Matters:</strong> "Time is muscle" - get help immediately</li></ul><br><strong>Heart-Healthy Lifestyle:</strong><ul><li><strong>Mediterranean Diet:</strong> Olive oil, fish, fruits, vegetables, whole grains</li><li><strong>Exercise:</strong> 150 minutes moderate or 75 minutes vigorous weekly</li><li><strong>Don\'t Smoke:</strong> Smoking doubles heart disease risk</li><li><strong>Manage Stress:</strong> Meditation, deep breathing, social support</li><li><strong>Sleep Well:</strong> 7-9 hours nightly</li><li><strong>Limit Alcohol:</strong> 1 drink/day (women), 2 drinks/day (men)</li></ul><br><strong>Common Heart Medications:</strong><ul><li><strong>Aspirin:</strong> 81mg daily prevents blood clots</li><li><strong>Beta Blockers:</strong> Slow heart rate, reduce workload</li><li><strong>ACE Inhibitors:</strong> Lower blood pressure, protect heart</li><li><strong>Statins:</strong> Lower cholesterol, stabilize plaques</li><li><strong>Blood Thinners:</strong> Prevent dangerous clots</li></ul><br><strong>Heart Failure Symptoms:</strong><ul><li><strong>Shortness of Breath:</strong> Especially lying flat or with activity</li><li><strong>Fatigue:</strong> Less energy for normal activities</li><li><strong>Swelling:</strong> Feet, ankles, legs, abdomen</li><li><strong>Rapid Weight Gain:</strong> 2-3 pounds in 24 hours</li><li><strong>Persistent Cough:</strong> Especially with white/pink phlegm</li></ul><br><strong>When to Seek Emergency Care:</strong><ul><li>Any chest pain lasting over 5 minutes</li><li>Severe shortness of breath at rest</li><li>Fainting or near-fainting</li><li>Rapid heart rate over 150 with symptoms</li><li>Sudden severe swelling</li></ul>';
+    <strong>DIABETES MELLITUS: COMPLETE GUIDE</strong><br><br>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+      <div>
+        <strong>🔍 Diagnostic Criteria (ADA 2024)</strong>
+        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
+          <tr style="background-color: #f2f2f2;"><th>Test</th><th>Prediabetes</th><th>Diabetes</th></tr>
+          <tr><td>Fasting Glucose</td><td>100-125</td><td>≥126</td></tr>
+          <tr><td>A1C</td><td>5.7-6.4%</td><td>≥6.5%</td></tr>
+          <tr><td>OGTT</td><td>140-199</td><td>≥200</td></tr>
+        </table>
+      </div>
+      <div>
+        <strong>🎯 Treatment Targets</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>A1C:</strong> <7% (most adults)</li>
+          <li><strong>Fasting:</strong> 80-130 mg/dL</li>
+          <li><strong>Postprandial:</strong> <180 mg/dL</li>
+          <li><strong>Time in Range:</strong> >70% (70-180 mg/dL)</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>💉 Medication Classes</strong>
+    <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
+      <tr style="background-color: #f2f2f2;">
+        <th>Class</th>
+        <th>Examples</th>
+        <th>A1C ↓</th>
+        <th>Key Benefits</th>
+      </tr>
+      <tr><td>Biguanides</td><td>Metformin</td><td>1-1.5%</td><td>First-line, weight neutral</td></tr>
+      <tr><td>SGLT2i</td><td>Empagliflozin</td><td>0.5-1%</td><td>Cardio/renal protection</td></tr>
+      <tr><td>GLP-1 RA</td><td>Semaglutide</td><td>1-1.5%</td><td>Weight loss, CV benefit</td></tr>
+      <tr><td>Insulin</td><td>Various</td><td>1.5-3.5%</td><td>Most potent</td></tr>
+    </table>
+
+    <strong>🚨 Diabetes Emergencies</strong>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 10px 0;">
+      <div style="background-color: #fff3cd; padding: 10px; border-radius: 5px;">
+        <strong>Hypoglycemia (<70 mg/dL)</strong>
+        <ul>
+          <li><strong>Mild:</strong> 15g fast carbs (4oz juice)</li>
+          <li><strong>Severe:</strong> Glucagon IM if unconscious</li>
+          <li><strong>Rebound:</strong> Protein snack after treatment</li>
+        </ul>
+      </div>
+      <div style="background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+        <strong>DKA (BG >250 + ketones)</strong>
+        <ul>
+          <li>IV fluids + insulin drip</li>
+          <li>Monitor K+ closely</li>
+          <li>Search for precipitant</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>🍽 Medical Nutrition Therapy</strong>
+    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ul>
+        <li><strong>Carb Counting:</strong> 45-60g per meal (consistent timing)</li>
+        <li><strong>Plate Method:</strong> ½ non-starchy veggies, ¼ protein, ¼ carbs</li>
+        <li><strong>Fiber:</strong> ≥14g/1000kcal (improves glycemic control)</li>
+      </ul>
+    </div>`;
   }
 
-  // DIABETES QUERIES
-  if (queryLower.includes('diabetes') || queryLower.includes('blood sugar') || queryLower.includes('glucose') ||
-      queryLower.includes('insulin') || queryLower.includes('diabetic') || queryLower.includes('a1c') ||
-      queryLower.includes('metformin') || queryLower.includes('hypoglycemia') || queryLower.includes('hyperglycemia') ||
-      queryLower.includes('type 1') || queryLower.includes('type 2') || queryLower.includes('blood glucose') ||
-      queryLower.includes('sugar level') || queryLower.includes('diabetic diet') || queryLower.includes('carbs') ||
-      queryLower.includes('carbohydrate') || queryLower.includes('ketoacidosis') || queryLower.includes('dka') ||
-      queryLower.includes('sugar high') || queryLower.includes('sugar low') || queryLower.includes('glucose meter') ||
-      queryLower.includes('blood test') || queryLower.includes('prediabetes') || queryLower.includes('gestational diabetes') ||
-      (queryLower.includes('my') && queryLower.includes('sugar') && (queryLower.includes('high') || queryLower.includes('low'))) ||
-      (queryLower.includes('blood') && queryLower.includes('sugar') && (queryLower.includes('control') || queryLower.includes('manage')))) {
+  // ========== HEART DISEASE CARD ==========
+  if (queryLower.includes('heart disease') || queryLower.includes('cad') || queryLower.includes('coronary')) {
+    return disclaimer + `
+    <img src="infohealth-professional-3.jpg" alt="Heart Disease Management" class="medical-image">
     
-    return disclaimer + '<img src="public/medical-professional-4.jpg" alt="Diabetes Management" class="medical-image"><br><strong>COMPREHENSIVE DIABETES MANAGEMENT GUIDE</strong><br><br><strong>Blood Sugar Target Ranges:</strong><ul><li><strong>Before Meals:</strong> 80-130 mg/dL</li><li><strong>2 Hours After Meals:</strong> Less than 180 mg/dL</li><li><strong>HbA1c Goal:</strong> Less than 7% for most adults</li><li><strong>Bedtime:</strong> 100-140 mg/dL</li></ul><br><strong>Type 1 vs Type 2 Diabetes:</strong><ul><li><strong>Type 1:</strong> Body doesn\'t make insulin (autoimmune), needs insulin shots</li><li><strong>Type 2:</strong> Body doesn\'t use insulin well, may need pills or insulin</li><li><strong>Prediabetes:</strong> Blood sugar higher than normal but not diabetic yet</li><li><strong>Gestational:</strong> Diabetes during pregnancy</li></ul><br><strong>Blood Sugar Control Tips:</strong><ul><li><strong>Check Regularly:</strong> Before meals, 2 hours after, bedtime</li><li><strong>Take Medications:</strong> As prescribed, same time daily</li><li><strong>Count Carbs:</strong> 45-60g per meal, consistent timing</li><li><strong>Exercise Daily:</strong> 30 minutes helps lower blood sugar</li><li><strong>Stay Hydrated:</strong> Drink water, avoid sugary drinks</li><li><strong>Manage Stress:</strong> Stress raises blood sugar</li></ul><br><strong>Diabetic Diet Guidelines:</strong><ul><li><strong>Choose:</strong> Whole grains, lean proteins, vegetables, fruits</li><li><strong>Limit:</strong> Refined sugars, white bread, sugary drinks</li><li><strong>Portion Control:</strong> Use plate method (½ vegetables, ¼ protein, ¼ starch)</li><li><strong>Healthy Snacks:</strong> Nuts, Greek yogurt, vegetables with hummus</li><li><strong>Timing:</strong> Eat regular meals, don\'t skip</li></ul><br><strong>🚨 DANGEROUS BLOOD SUGAR LEVELS:</strong><br><br><strong>Severe Low Blood Sugar (Under 54 mg/dL):</strong><ul><li><strong>Symptoms:</strong> Confusion, shakiness, sweating, fast heartbeat</li><li><strong>Treatment:</strong> 15g fast-acting carbs (4 glucose tablets, ½ cup juice)</li><li><strong>Emergency:</strong> If unconscious, call 911, give glucagon if available</li></ul><br><strong>Dangerously High Blood Sugar (Over 400 mg/dL):</strong><ul><li><strong>Symptoms:</strong> Extreme thirst, frequent urination, nausea, vomiting</li><li><strong>Risk:</strong> Diabetic ketoacidosis (DKA) - life-threatening</li><li><strong>Action:</strong> Call doctor immediately, may need emergency care</li></ul><br><strong>Common Diabetes Medications:</strong><ul><li><strong>Metformin:</strong> Reduces glucose production, first-line treatment</li><li><strong>Insulin:</strong> Various types (rapid, long-acting), essential for Type 1</li><li><strong>Sulfonylureas:</strong> Stimulate insulin production</li><li><strong>SGLT2 Inhibitors:</strong> Help kidneys remove glucose</li></ul>';
+    <strong>CORONARY ARTERY DISEASE: COMPLETE GUIDE</strong><br><br>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+      <div>
+        <strong>🩺 Diagnostic Workup</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>Stress Test:</strong> ECG changes, perfusion defects</li>
+          <li><strong>Coronary CTA:</strong> Low-intermediate risk patients</li>
+          <li><strong>Angiography:</strong> Gold standard for stenosis</li>
+          <li><strong>Calcium Score:</strong> Agatston score ≥100 = increased risk</li>
+        </ul>
+      </div>
+      <div>
+        <strong>💊 Medical Therapy (AHA 2023)</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>High-Intensity Statin:</strong> Atorvastatin 40-80mg</li>
+          <li><strong>Anti-platelets:</strong> Aspirin 81mg + Clopidogrel post-PCI</li>
+          <li><strong>Beta-blockers:</strong> Metoprolol succinate post-MI</li>
+          <li><strong>ACE-I/ARB:</strong> For LV dysfunction</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>❤️ Cardiac Rehabilitation</strong>
+    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ul>
+        <li>36 sessions over 12 weeks</li>
+        <li>Exercise training + education</li>
+        <li>Mortality reduction up to 25%</li>
+        <li>Underutilized (only 20-30% eligible patients)</li>
+      </ul>
+    </div>
+
+    <strong>🚨 Acute Coronary Syndrome</strong>
+    <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
+      <tr style="background-color: #f2f2f2;">
+        <th>Type</th>
+        <th>ECG</th>
+        <th>Troponin</th>
+        <th>Management</th>
+      </tr>
+      <tr><td>STEMI</td><td>ST ↑</td><td>+</td><td>PCI within 90 mins</td></tr>
+      <tr><td>NSTEMI</td><td>ST ↓/T wave</td><td>+</td><td>PCI within 24-48h</td></tr>
+      <tr><td>Unstable Angina</td><td>Normal/dynamic</td><td>-</td><td>Risk stratification</td></tr>
+    </table>
+
+    <strong>🔍 Risk Factors (ASCVD Risk Calculator)</strong>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
+      <div>
+        <strong>Non-Modifiable</strong>
+        <ul>
+          <li>Age (M >45, F >55)</li>
+          <li>Male sex</li>
+          <li>Family history</li>
+        </ul>
+      </div>
+      <div>
+        <strong>Modifiable</strong>
+        <ul>
+          <li>Hypertension</li>
+          <li>Dyslipidemia</li>
+          <li>Diabetes</li>
+          <li>Smoking</li>
+        </ul>
+      </div>
+    </div>`;
   }
 
-  // GENERAL WELLNESS & LIFESTYLE QUERIES
-  if (queryLower.includes('diet') || queryLower.includes('exercise') || queryLower.includes('weight') ||
-      queryLower.includes('nutrition') || queryLower.includes('healthy eating') || queryLower.includes('wellness') ||
-      queryLower.includes('prevention') || queryLower.includes('lifestyle') || queryLower.includes('stress') ||
-      queryLower.includes('sleep') || queryLower.includes('smoking') || queryLower.includes('alcohol')) {
+  // ========== GENERAL WELLNESS CARD ==========
+  if (queryLower.includes('wellness') || queryLower.includes('prevention') || queryLower.includes('healthy lifestyle')) {
+    return disclaimer + `
+    <img src="medical-professional-5.jpg" alt="Wellness Management" class="medical-image">
     
-    return disclaimer + '<strong>COMPREHENSIVE WELLNESS & PREVENTION GUIDE</strong><br><br><strong>Heart-Healthy Diet Fundamentals:</strong><ul><li><strong>Mediterranean Diet:</strong> Olive oil, fish, fruits, vegetables, whole grains, nuts</li><li><strong>DASH Diet:</strong> Low sodium, high potassium, emphasizes fruits/vegetables</li><li><strong>Limit:</strong> Saturated fat under 7%, trans fat under 1%, sodium under 2.3g daily</li><li><strong>Portion Control:</strong> Use smaller plates, eat slowly, stop when satisfied</li></ul><br><strong>Exercise Recommendations:</strong><ul><li><strong>Cardio:</strong> 150 minutes moderate or 75 minutes vigorous weekly</li><li><strong>Strength Training:</strong> 2+ days per week, all major muscle groups</li><li><strong>Flexibility:</strong> Stretching or yoga 2-3 times weekly</li><li><strong>Start Slow:</strong> If inactive, begin with 10-minute walks</li></ul><br><strong>Stress Management:</strong><ul><li><strong>Deep Breathing:</strong> 4-7-8 technique (inhale 4, hold 7, exhale 8)</li><li><strong>Meditation:</strong> 10-20 minutes daily, apps like Headspace/Calm</li><li><strong>Physical Activity:</strong> Walking, yoga, tai chi reduce stress</li><li><strong>Social Support:</strong> Connect with family/friends regularly</li></ul><br><strong>Quality Sleep Tips:</strong><ul><li><strong>Schedule:</strong> Same bedtime/wake time daily, including weekends</li><li><strong>Environment:</strong> Dark, cool (65-68°F), quiet room</li><li><strong>Avoid:</strong> Caffeine 6+ hours before bed, screens 1 hour before</li><li><strong>Duration:</strong> 7-9 hours for adults</li></ul>';
+    <strong>PREVENTIVE HEALTH: COMPLETE GUIDE</strong><br><br>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+      <div>
+        <strong>🩺 Screening Recommendations</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>BP:</strong> Annually if normal</li>
+          <li><strong>Lipids:</strong> Every 5 years from age 20</li>
+          <li><strong>Diabetes:</strong> Screen at 35+ (or if overweight)</li>
+          <li><strong>Colon Cancer:</strong> Colonoscopy at 45+</li>
+        </ul>
+      </div>
+      <div>
+        <strong>💉 Immunizations</strong>
+        <ul style="margin-top: 5px;">
+          <li><strong>Influenza:</strong> Annual</li>
+          <li><strong>COVID-19:</strong> Per CDC guidelines</li>
+          <li><strong>Shingles:</strong> ≥50 years (Shingrix)</li>
+          <li><strong>Pneumococcal:</strong> ≥65 years</li>
+        </ul>
+      </div>
+    </div>
+
+    <strong>🍽 Dietary Guidelines (USDA 2020-2025)</strong>
+    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <ul>
+        <li><strong>Vegetables:</strong> 2.5 cups/day</li>
+        <li><strong>Fruits:</strong> 2 cups/day</li>
+        <li><strong>Whole Grains:</strong> ≥3 oz-equivalents/day</li>
+        <li><strong>Dairy:</strong> 3 cups/day (low-fat)</li>
+        <li><strong>Protein:</strong> 5.5 oz-equivalents/day</li>
+      </ul>
+    </div>
+
+    <strong>🏃 Physical Activity (WHO Guidelines)</strong>
+    <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
+      <tr style="background-color: #f2f2f2;">
+        <th>Activity</th>
+        <th>Frequency</th>
+        <th>Duration</th>
+      </tr>
+      <tr><td>Aerobic</td><td>3-5x/week</td><td>30-60 mins</td></tr>
+      <tr><td>Strength</td><td>2x/week</td><td>All major groups</td></tr>
+      <tr><td>Flexibility</td><td>2-3x/week</td><td>10-15 mins</td></tr>
+      <tr><td>Balance</td><td>3x/week</td><td>For fall prevention</td></tr>
+    </table>
+
+    <strong>😴 Sleep Hygiene</strong>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
+      <div>
+        <strong>Do:</strong>
+        <ul>
+          <li>Consistent sleep schedule</li>
+          <li>Cool, dark environment</li>
+          <li>Wind-down routine</li>
+        </ul>
+      </div>
+      <div>
+        <strong>Avoid:</strong>
+        <ul>
+          <li>Caffeine after 2pm</li>
+          <li>Screens before bed</li>
+          <li>Alcohol near bedtime</li>
+        </ul>
+      </div>
+    </div>`;
   }
 
-  // MEDICATION & DRUG INTERACTION QUERIES
-  if (queryLower.includes('medication') || queryLower.includes('drug interaction') || queryLower.includes('side effect') ||
-      queryLower.includes('pill') || queryLower.includes('prescription') || queryLower.includes('pharmacy') ||
-      queryLower.includes('dosage') || queryLower.includes('when to take') || queryLower.includes('drug safety')) {
-    
-    return disclaimer + '<strong>MEDICATION SAFETY & MANAGEMENT</strong><br><br><strong>Important Drug Safety Tips:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Abruptly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels:</strong> Check expiration dates, storage requirements</li><li><strong>Keep List Updated:</strong> Include supplements, over-the-counter medications</li></ul><br><strong>Common Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increased bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Dangerous high potassium levels</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Multiple Blood Pressure Meds:</strong> Risk of dangerously low pressure</li></ul><br><strong>When to Call Your Doctor:</strong><ul><li>Severe side effects or allergic reactions</li><li>New symptoms after starting medication</li><li>Want to stop or change medications</li><li>Questions about interactions with new drugs</li></ul><br><strong>Medication Organization:</strong><ul><li>Use pill organizers for daily medications</li><li>Set phone alarms for medication times</li><li>Keep emergency medications easily accessible</li><li>Store medications properly (temperature, light)</li></ul>';
-  }
+  // [Additional cards can be added here following the same pattern]
 
-  // EMERGENCY & SYMPTOM QUERIES
-  if (queryLower.includes('emergency') || queryLower.includes('when to call 911') || queryLower.includes('warning signs') ||
-      queryLower.includes('symptoms') || queryLower.includes('urgent') || queryLower.includes('serious') ||
-      queryLower.includes('dangerous') || queryLower.includes('call doctor')) {
-    
-    return disclaimer + '<strong>🚨 MEDICAL EMERGENCY RECOGNITION</strong><br><br><strong>CALL 911 IMMEDIATELY FOR:</strong><ul><li><strong>Chest Pain:</strong> Lasting over 5 minutes, especially with sweating/nausea</li><li><strong>Stroke Signs:</strong> Face drooping, arm weakness, speech difficulty</li><li><strong>Severe Breathing Problems:</strong> Unable to speak in full sentences</li><li><strong>Severe Allergic Reaction:</strong> Swelling, difficulty breathing, hives</li><li><strong>Blood Sugar Emergencies:</strong> Unconscious diabetic, severe confusion</li></ul><br><strong>Call Your Doctor Same Day For:</strong><ul><li>Blood pressure over 180/120 without symptoms</li><li>Blood sugar consistently over 300 mg/dL</li><li>New or worsening shortness of breath</li><li>Rapid weight gain (3+ pounds in 24 hours)</li><li>Severe medication side effects</li></ul><br><strong>Monitor and Schedule Appointment For:</strong><ul><li>Gradually worsening symptoms</li><li>Questions about medication effectiveness</li><li>Need for medication adjustments</li><li>Routine follow-up care</li></ul><br><strong>Keep These Numbers Handy:</strong><ul><li>911 for emergencies</li><li>Your doctor\'s office number</li><li>24-hour nurse hotline (if available)</li><li>Poison Control: 1-800-222-1222</li></ul>';
-  }
-
-  // HEALTH CALENDAR & TRACKING QUERIES
-  if (queryLower.includes('calendar') || queryLower.includes('tracking') || queryLower.includes('schedule') ||
-      queryLower.includes('health tracking') || queryLower.includes('health calendar')) {
-    
-    return disclaimer + '<strong>📅 HEALTH TRACKING & CALENDAR MANAGEMENT</strong><br><br><strong>Daily Health Tracking:</strong><ul><li><strong>Blood Pressure:</strong> Same time daily (morning preferred), log readings</li><li><strong>Blood Sugar:</strong> Before meals, 2 hours after, bedtime (if diabetic)</li><li><strong>Weight:</strong> Daily, same time, same clothes (heart failure patients)</li><li><strong>Medications:</strong> Check off when taken, note any missed doses</li><li><strong>Symptoms:</strong> Rate daily (1-10 scale), note triggers</li></ul><br><strong>Weekly Health Goals:</strong><ul><li><strong>Exercise:</strong> 150 minutes moderate activity per week</li><li><strong>Meal Prep:</strong> Plan heart-healthy meals for the week</li><li><strong>Medication Review:</strong> Organize pill containers weekly</li><li><strong>Weight Trend:</strong> Calculate weekly average</li></ul><br><strong>Monthly Health Checkups:</strong><ul><li><strong>Blood Pressure Log Review:</strong> Look for patterns and trends</li><li><strong>Medication Effectiveness:</strong> Note if adjustments needed</li><li><strong>Doctor Appointments:</strong> Schedule routine follow-ups</li><li><strong>Lab Work:</strong> Schedule blood tests as recommended</li></ul><br><strong>Health Tracking Apps & Tools:</strong><ul><li><strong>Blood Pressure:</strong> AHA Check. Change. Control, Heart Habit</li><li><strong>Diabetes:</strong> MySugr, Glucose Buddy, Diabetic Connect</li><li><strong>General Health:</strong> MyFitnessPal, Apple Health, Google Fit</li><li><strong>Medication:</strong> Medisafe, MyTherapy, Round Health</li></ul>';
-  }
-
-  // PERSONAL HEALTH INFO MANAGEMENT
-  if (queryLower.includes('personal health') || queryLower.includes('health information') || queryLower.includes('my info') ||
-      queryLower.includes('health records') || queryLower.includes('medical history')) {
-    
-    return disclaimer + '<strong>📋 PERSONAL HEALTH INFORMATION MANAGEMENT</strong><br><br><strong>Essential Health Information to Track:</strong><ul><li><strong>Current Medications:</strong> Names, dosages, times taken, prescribing doctor</li><li><strong>Medical Conditions:</strong> Diagnoses, dates diagnosed, current status</li><li><strong>Allergies:</strong> Drug allergies, food allergies, reaction descriptions</li><li><strong>Emergency Contacts:</strong> Doctor numbers, family contacts, pharmacy</li><li><strong>Insurance Info:</strong> Card photos, member ID, group numbers</li></ul><br><strong>Key Health Numbers to Know:</strong><ul><li><strong>Blood Pressure Target:</strong> Your specific goal (usually under 130/80)</li><li><strong>Cholesterol Levels:</strong> Last LDL, HDL, triglyceride results</li><li><strong>HbA1c (if diabetic):</strong> Last 3-6 month average blood sugar</li><li><strong>Weight Goal:</strong> Target BMI or weight range</li><li><strong>Heart Rate Range:</strong> Resting and target exercise rates</li></ul><br><strong>Medical History Essentials:</strong><ul><li><strong>Family History:</strong> Parents/siblings with heart disease, diabetes, high BP</li><li><strong>Previous Procedures:</strong> Surgeries, cardiac procedures, hospitalizations</li><li><strong>Previous Medications:</strong> What worked, what caused side effects</li><li><strong>Baseline Tests:</strong> EKG, echocardiogram, stress test results</li></ul><br><strong>Health Information Security:</strong><ul><li><strong>Digital Copies:</strong> Photos of insurance cards, medication lists</li><li><strong>Secure Storage:</strong> Password-protected files or health apps</li><li><strong>Share Appropriately:</strong> Give copies to family members, caregivers</li><li><strong>Keep Updated:</strong> Review and update quarterly</li></ul>';
-  }
-
-  // MEDICAL APPOINTMENTS MANAGEMENT
-  if (queryLower.includes('appointments') || queryLower.includes('doctor visit') || queryLower.includes('medical appointment') ||
-      queryLower.includes('follow-up') || queryLower.includes('checkup')) {
-    
-    return disclaimer + '<strong>🏥 MEDICAL APPOINTMENTS & FOLLOW-UP CARE</strong><br><br><strong>Routine Appointment Schedule:</strong><ul><li><strong>Primary Care:</strong> Every 6-12 months for chronic conditions</li><li><strong>Cardiologist:</strong> Every 3-6 months for heart disease patients</li><li><strong>Endocrinologist:</strong> Every 3-6 months for diabetes</li><li><strong>Eye Doctor:</strong> Annually for diabetics, every 2 years otherwise</li><li><strong>Dentist:</strong> Every 6 months (important for heart health)</li></ul><br><strong>Preparing for Doctor Visits:</strong><ul><li><strong>Medication List:</strong> Bring current list with dosages</li><li><strong>Symptom Log:</strong> Notes on any new or changing symptoms</li><li><strong>Question List:</strong> Write down questions beforehand</li><li><strong>Health Logs:</strong> Blood pressure, blood sugar, weight trends</li><li><strong>Insurance Card:</strong> Bring current card and ID</li></ul><br><strong>Important Lab Tests & Frequency:</strong><ul><li><strong>Blood Pressure Patients:</strong> Basic metabolic panel every 6-12 months</li><li><strong>Cholesterol:</strong> Lipid panel every 3-6 months until stable</li><li><strong>Diabetes:</strong> HbA1c every 3-6 months, annual kidney function</li><li><strong>Heart Disease:</strong> Various tests based on condition</li></ul><br><strong>After Your Appointment:</strong><ul><li><strong>Get Summary:</strong> Ask for written summary of visit</li><li><strong>Understand Instructions:</strong> Clarify any medication changes</li><li><strong>Schedule Follow-up:</strong> Book next appointment before leaving</li><li><strong>Fill Prescriptions:</strong> Get new medications promptly</li><li><strong>Follow Instructions:</strong> Implement any lifestyle changes discussed</li></ul>';
-  }
-
-  // MEDICATION MANAGEMENT
-  if (queryLower.includes('medication management') || queryLower.includes('manage medications') || 
-      queryLower.includes('pill organization') || queryLower.includes('medication safety') ||
-      (queryLower.includes('medications') && !queryLower.includes('heart') && !queryLower.includes('diabetes'))) {
-    
-    return disclaimer + '<strong>💊 COMPREHENSIVE MEDICATION MANAGEMENT</strong><br><br><strong>Medication Organization System:</strong><ul><li><strong>Pill Organizers:</strong> Weekly organizers with AM/PM compartments</li><li><strong>Medication List:</strong> Keep updated list in wallet and on phone</li><li><strong>Set Reminders:</strong> Phone alarms for each medication time</li><li><strong>Refill Calendar:</strong> Mark refill dates on calendar</li><li><strong>Emergency Supply:</strong> Keep 7-day supply for emergencies</li></ul><br><strong>Safe Medication Practices:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Suddenly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels Carefully:</strong> Check expiration dates and instructions</li><li><strong>Store Properly:</strong> Cool, dry place unless refrigeration needed</li><li><strong>Keep Original Bottles:</strong> For emergency identification</li></ul><br><strong>Critical Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increases bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Can cause dangerous high potassium</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Diabetes Meds + Alcohol:</strong> Risk of dangerous low blood sugar</li><li><strong>Multiple BP Meds:</strong> Can cause dangerously low blood pressure</li></ul><br><strong>When to Contact Your Doctor:</strong><ul><li><strong>Side Effects:</strong> New symptoms after starting medication</li><li><strong>Missed Doses:</strong> Unsure what to do if you miss doses</li><li><strong>Cost Issues:</strong> Can\'t afford medications</li><li><strong>Effectiveness:</strong> Medication doesn\'t seem to be working</li><li><strong>New Medications:</strong> Before starting any new drugs or supplements</li></ul><br><strong>Medication Cost-Saving Tips:</strong><ul><li><strong>Generic Options:</strong> Ask about generic versions</li><li><strong>Manufacturer Coupons:</strong> Check drug company websites</li><li><strong>Pharmacy Programs:</strong> Walmart $4 list, Costco, etc.</li><li><strong>Insurance Formulary:</strong> Choose preferred drugs when possible</li><li><strong>90-Day Supplies:</strong> Often cheaper than monthly refills</li></ul>';
-  }
-
-  // DEFAULT RESPONSE WITH SUGGESTIONS
-  return disclaimer + 'I specialize in <strong>Hypertension, Cholesterol, Heart Disease, Diabetes, and Health Management</strong>.<br><br><strong>Popular Questions I Can Help With:</strong><ul><li>"My blood pressure is 150/95, what should I do?"</li><li>"How can I lower my cholesterol naturally?"</li><li>"What are the warning signs of a heart attack?"</li><li>"How do I control my blood sugar better?"</li><li>"How should I organize my medications?"</li><li>"What should I track in my health calendar?"</li><li>"How do I prepare for doctor appointments?"</li><li>"What health information should I keep?"</li><li>"When should I call 911 for chest pain?"</li><li>"Can I exercise with heart disease?"</li></ul><br><strong>Try asking about:</strong> Symptoms, medications, diet, exercise, emergency signs, natural treatments, health tracking, or appointment management.<br><br>Click the topic cards above for detailed information!';
+  // DEFAULT RESPONSE
+  return disclaimer + 'I specialize in <strong>Hypertension, Cholesterol, Diabetes, and Heart Disease</strong>.<br><br>Try asking about specific conditions, medications, or management strategies.';
 }
 
-// Send message with chat clearing (for card clicks)
-function sendMessageWithClear(preset) {
-  clearChat(); // Clear previous conversation
-  sendMessage(preset);
-}
+      // PERSONAL HEALTH INFO MANAGEMENT
+      if (queryLower.includes('personal health') || queryLower.includes('health information') || queryLower.includes('my info') ||
+          queryLower.includes('health records') || queryLower.includes('medical history')) {
+        
+        return disclaimer + '<strong>📋 PERSONAL HEALTH INFORMATION MANAGEMENT</strong><br><br><strong>Essential Health Information to Track:</strong><ul><li><strong>Current Medications:</strong> Names, dosages, times taken, prescribing doctor</li><li><strong>Medical Conditions:</strong> Diagnoses, dates diagnosed, current status</li><li><strong>Allergies:</strong> Drug allergies, food allergies, reaction descriptions</li><li><strong>Emergency Contacts:</strong> Doctor numbers, family contacts, pharmacy</li><li><strong>Insurance Info:</strong> Card photos, member ID, group numbers</li></ul><br><strong>Key Health Numbers to Know:</strong><ul><li><strong>Blood Pressure Target:</strong> Your specific goal (usually under 130/80)</li><li><strong>Cholesterol Levels:</strong> Last LDL, HDL, triglyceride results</li><li><strong>HbA1c (if diabetic):</strong> Last 3-6 month average blood sugar</li><li><strong>Weight Goal:</strong> Target BMI or weight range</li><li><strong>Heart Rate Range:</strong> Resting and target exercise rates</li></ul><br><strong>Medical History Essentials:</strong><ul><li><strong>Family History:</strong> Parents/siblings with heart disease, diabetes, high BP</li><li><strong>Previous Procedures:</strong> Surgeries, cardiac procedures, hospitalizations</li><li><strong>Previous Medications:</strong> What worked, what caused side effects</li><li><strong>Baseline Tests:</strong> EKG, echocardiogram, stress test results</li></ul><br><strong>Health Information Security:</strong><ul><li><strong>Digital Copies:</strong> Photos of insurance cards, medication lists</li><li><strong>Secure Storage:</strong> Password-protected files or health apps</li><li><strong>Share Appropriately:</strong> Give copies to family members, caregivers</li><li><strong>Keep Updated:</strong> Review and update quarterly</li></ul>';
+      }
 
-// Enhanced send message function with smart vs basic responses
-function sendMessage(preset) {
-  const userInput = document.getElementById('userInput');
-  const text = preset || (userInput ? userInput.value.trim() : '');
-  if (!text) return;
+      // MEDICAL APPOINTMENTS MANAGEMENT
+      if (queryLower.includes('appointments') || queryLower.includes('doctor visit') || queryLower.includes('medical appointment') ||
+          queryLower.includes('follow-up') || queryLower.includes('checkup')) {
+        
+        return disclaimer + '<strong>🏥 MEDICAL APPOINTMENTS & FOLLOW-UP CARE</strong><br><br><strong>Routine Appointment Schedule:</strong><ul><li><strong>Primary Care:</strong> Every 6-12 months for chronic conditions</li><li><strong>Cardiologist:</strong> Every 3-6 months for heart disease patients</li><li><strong>Endocrinologist:</strong> Every 3-6 months for diabetes</li><li><strong>Eye Doctor:</strong> Annually for diabetics, every 2 years otherwise</li><li><strong>Dentist:</strong> Every 6 months (important for heart health)</li></ul><br><strong>Preparing for Doctor Visits:</strong><ul><li><strong>Medication List:</strong> Bring current list with dosages</li><li><strong>Symptom Log:</strong> Notes on any new or changing symptoms</li><li><strong>Question List:</strong> Write down questions beforehand</li><li><strong>Health Logs:</strong> Blood pressure, blood sugar, weight trends</li><li><strong>Insurance Card:</strong> Bring current card and ID</li></ul><br><strong>Important Lab Tests & Frequency:</strong><ul><li><strong>Blood Pressure Patients:</strong> Basic metabolic panel every 6-12 months</li><li><strong>Cholesterol:</strong> Lipid panel every 3-6 months until stable</li><li><strong>Diabetes:</strong> HbA1c every 3-6 months, annual kidney function</li><li><strong>Heart Disease:</strong> Various tests based on condition</li></ul><br><strong>After Your Appointment:</strong><ul><li><strong>Get Summary:</strong> Ask for written summary of visit</li><li><strong>Understand Instructions:</strong> Clarify any medication changes</li><li><strong>Schedule Follow-up:</strong> Book next appointment before leaving</li><li><strong>Fill Prescriptions:</strong> Get new medications promptly</li><li><strong>Follow Instructions:</strong> Implement any lifestyle changes discussed</li></ul>';
+      }
 
-  // Add user message instantly
-  addBubble(text, 'user', false);
-  if (userInput) userInput.value = '';
+      // MEDICATION MANAGEMENT
+      if (queryLower.includes('medication management') || queryLower.includes('manage medications') || 
+          queryLower.includes('pill organization') || queryLower.includes('medication safety') ||
+          (queryLower.includes('medications') && !queryLower.includes('heart') && !queryLower.includes('diabetes'))) {
+        
+        return disclaimer + '<strong>💊 COMPREHENSIVE MEDICATION MANAGEMENT</strong><br><br><strong>Medication Organization System:</strong><ul><li><strong>Pill Organizers:</strong> Weekly organizers with AM/PM compartments</li><li><strong>Medication List:</strong> Keep updated list in wallet and on phone</li><li><strong>Set Reminders:</strong> Phone alarms for each medication time</li><li><strong>Refill Calendar:</strong> Mark refill dates on calendar</li><li><strong>Emergency Supply:</strong> Keep 7-day supply for emergencies</li></ul><br><strong>Safe Medication Practices:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Suddenly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels Carefully:</strong> Check expiration dates and instructions</li><li><strong>Store Properly:</strong> Cool, dry place unless refrigeration needed</li><li><strong>Keep Original Bottles:</strong> For emergency identification</li></ul><br><strong>Critical Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increases bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Can cause dangerous high potassium</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Diabetes Meds + Alcohol:</strong> Risk of dangerous low blood sugar</li><li><strong>Multiple BP Meds:</strong> Can cause dangerously low blood pressure</li></ul><br><strong>When to Contact Your Doctor:</strong><ul><li><strong>Side Effects:</strong> New symptoms after starting medication</li><li><strong>Missed Doses:</strong> Unsure what to do if you miss doses</li><li><strong>Cost Issues:</strong> Can\'t afford medications</li><li><strong>Effectiveness:</strong> Medication doesn\'t seem to be working</li><li><strong>New Medications:</strong> Before starting any new drugs or supplements</li></ul><br><strong>Medication Cost-Saving Tips:</strong><ul><li><strong>Generic Options:</strong> Ask about generic versions</li><li><strong>Manufacturer Coupons:</strong> Check drug company websites</li><li><strong>Pharmacy Programs:</strong> Walmart $4 list, Costco, etc.</li><li><strong>Insurance Formulary:</strong> Choose preferred drugs when possible</li><li><strong>90-Day Supplies:</strong> Often cheaper than monthly refills</li></ul>';
+      }
 
-  // Add bot response with enhanced processing
-  setTimeout(() => {
-    let response;
-    
-    if (preset) {
-      // Card clicks get basic overview (original responses)
-      response = getMedicalResponse(text);
-    } else {
-      // Typed questions get smart AI-like responses
-      response = getSmartResponse(text);
+      // DEFAULT RESPONSE WITH SUGGESTIONS
+      return disclaimer + 'I specialize in <strong>Hypertension, Cholesterol, Heart Disease, Diabetes, and Health Management</strong>.<br><br><strong>Popular Questions I Can Help With:</strong><ul><li>"My blood pressure is 150/95, what should I do?"</li><li>"How can I lower my cholesterol naturally?"</li><li>"What are the warning signs of a heart attack?"</li><li>"How do I control my blood sugar better?"</li><li>"How should I organize my medications?"</li><li>"What should I track in my health calendar?"</li><li>"How do I prepare for doctor appointments?"</li><li>"What health information should I keep?"</li><li>"When should I call 911 for chest pain?"</li><li>"Can I exercise with heart disease?"</li></ul><br><strong>Try asking about:</strong> Symptoms, medications, diet, exercise, emergency signs, natural treatments, health tracking, or appointment management.<br><br>Click the topic cards above for detailed information!';
     }
-    
-    addBubble(response, 'bot', true); // Enable typewriter effect
-  }, 800);
-}
 
-// Health Management System - In-Memory Storage
-let healthData = {
-  readings: [],
-  goals: [],
-  personalInfo: {},
-  conditions: [],
-  allergies: [],
-  appointments: [],
-  medications: []
-};
+    // Send message with chat clearing (for card clicks)
+    function sendMessageWithClear(preset) {
+      clearChat(); // Clear previous conversation
+      sendMessage(preset);
+    }
+
+    // Regular send message function (for typed messages)
+    function sendMessage(preset) {
+      const text = preset || userInput.value.trim();
+      if (!text) return;
+
+      // Add user message instantly
+      addBubble(text, 'user', false);
+      userInput.value = '';
+
+      // Add bot response with typewriter effect after delay
+      setTimeout(() => {
+        const response = getMedicalResponse(text);
+        addBubble(response, 'bot', true); // Enable typewriter effect
+      }, 800);
+    }
+
+    // Enter key support
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    console.log('InfoHealth AI app initialized with enhanced natural language processing');
+
+    // Health Management System - In-Memory Storage
+    let healthData = {
+      readings: [],
+      goals: [],
+      personalInfo: {},
+      conditions: [],
+      allergies: [],
+      appointments: [],
+      medications: []
+    };
+
     // Modal Management Functions
     function showHealthCalendar() {
       document.getElementById('calendarModal').style.display = 'block';
@@ -1736,11 +1689,6 @@ let healthData = {
       healthData.medications = healthData.medications.filter(m => m.id !== id);
       loadMedications();
     }
-
-    // Enter key support
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
   </script>
 </body>
 </html>
