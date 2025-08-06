@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InfoHealth AI – General Medicine</title>
-  <link rel="icon" href="infohealth-logo.png" />
+  <link rel="icon" href="/public/infohealth-logo.png" />
   <style>
     * { box-sizing: border-box; }
     
@@ -551,7 +551,7 @@
 <body>
   <!-- Splash Screen -->
   <div class="splash-screen" id="splashScreen">
-    <img src="infohealth-logo.png" alt="InfoHealth AI Logo" class="splash-logo">
+    <img src="/public/infohealth-logo.png" alt="InfoHealth AI Logo" class="splash-logo">
     <h1 class="splash-title">InfoHealth AI</h1>
     <p class="splash-subtitle">Your Intelligent Health Companion</p>
     <div class="splash-loader"></div>
@@ -563,7 +563,7 @@
     <div class="mobile-frame">
     <div class="wrapper">
       <div class="header">
-        <img src="infohealth-logo.png" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
+        <img src="/public/infohealth-logo.png" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
       </div>
 
       <div class="cards-container">
@@ -877,8 +877,8 @@
       wrap.className = 'bubble-wrapper ' + role;
 
       const avatar = role === 'user' 
-        ? 'infohealth-user-logo.png'
-        : 'infohealth-logo-small.png';
+        ? '/public/infohealth-user-logo.png'
+        : '/public/infohealth-logo-small.png';
 
       wrap.innerHTML = '<div class="avatar"><img src="' + avatar + '" alt="' + role + '" /></div><div class="message"></div>';
       
@@ -982,7 +982,7 @@
   // ========== CHOLESTEROL CARD ==========
   if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl')) {
     return disclaimer + `
-    <img src="infohealth-professional-2.jpg" alt="Cholesterol Management" class="medical-image">
+    <img src="/public/infohealth-professional-2.jpg" alt="Cholesterol Management" class="medical-image">
     
     <strong>LIPID MANAGEMENT: COMPLETE GUIDE</strong><br><br>
     
@@ -1039,7 +1039,7 @@
   // ========== DIABETES CARD ==========
   if (queryLower.includes('diabetes') || queryLower.includes('blood sugar') || queryLower.includes('a1c')) {
     return disclaimer + `
-    <img src="infohealth-professional-4.jpg" alt="Diabetes Management" class="medical-image">
+    <img src="/public/infohealth-professional-4.jpg" alt="Diabetes Management" class="medical-image">
     
     <strong>DIABETES MELLITUS: COMPLETE GUIDE</strong><br><br>
     
@@ -1184,7 +1184,7 @@
   // ========== GENERAL WELLNESS CARD ==========
   if (queryLower.includes('wellness') || queryLower.includes('prevention') || queryLower.includes('healthy lifestyle')) {
     return disclaimer + `
-    <img src="medical-professional-5.jpg" alt="Wellness Management" class="medical-image">
+    <img src="/public/medical-professional-5.jpg" alt="Wellness Management" class="medical-image">
     
     <strong>PREVENTIVE HEALTH: COMPLETE GUIDE</strong><br><br>
     
