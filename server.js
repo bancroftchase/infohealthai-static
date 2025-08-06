@@ -1,49 +1,147 @@
-// server.js
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const { Configuration, OpenAIApi } = require('openai');
+const path = require('path');
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
 
+// MIDDLEWARE SETUP - ORDER MATTERS!
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from /public
-app.use(express.static(path.join(__dirname, 'public')));
+// Override CSP before serving static files
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', 
+    "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: http: https:; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; " +
+    "style-src 'self' 'unsafe-inline' http: https:; " +
+    "img-src 'self' data: blob: http: https:; " +
+    "connect-src 'self' http: https: ws: wss:; " +
+    "font-src 'self' data: http: https:;"
+  );
+  next();
+});
 
-// Setup OpenAI
-const openai = new OpenAIApi(new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-}));
+// Serve static files from current directory
+app.use(express.static(__dirname));
 
-// Chat endpoint
-app.post('/chat', async (req, res) => {
-  const { prompt } = req.body;
+// PUT YOUR ACTUAL API KEYS HERE
+const CLAUDE_API_KEY = 'your-actual-claude-key-here';
+const OPENAI_API_KEY = 'your-actual-openai-key-here';
 
+// API Routes
+app.post('/api/claude', async (req, res) => {
   try {
-    const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
+    console.log('🔍 Received Claude API request:', req.body.query);
+    
+    const { query } = req.body;
+    
+    if (!query) {
+      return res.json({ success: false, error: 'Query is required' });
+    }
+
+    if (CLAUDE_API_KEY === 'your-actual-claude-key-here') {
+      return res.json({ success: false, error: 'Claude API key not configured' });
+    }
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 1000,
+        messages: [
+          { 
+            role: 'user', 
+            content: `You are InfoHealth AI, a medical information assistant specializing in 5 primary conditions: hypertension, cholesterol, asthma, acid reflux, and diabetes.
+
+For the user question: "${query}"
+
+Provide a comprehensive, well-structured medical response following this format:
+- Start with brief disclaimer: "*Consult healthcare professionals for medical advice.*"
+- Use clear section headers with **bold text**
+- Include bullet points for easy reading
+- Add blank lines between major sections for readability
+- Focus on practical information patients need
+
+Make your response clearly different from a basic keyword lookup - provide context, explanations, and helpful details.`
+          }
+        ]
+      })
     });
 
-    const reply = response.data.choices[0].message.content.trim();
-    res.json({ reply });
-  } catch (err) {
-    console.error('OpenAI Error:', err.response?.data || err.message);
-    res.status(500).json({ error: 'AI request failed' });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Claude API Error:', response.status, errorText);
+      throw new Error(`Claude API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Claude API Success - Response length:', data.content[0].text.length);
+    
+    res.json({ 
+      success: true, 
+      response: data.content[0].text 
+    });
+
+  } catch (error) {
+    console.error('❌ Claude API Error:', error.message);
+    res.json({ 
+      success: false, 
+      error: error.message 
+    });
   }
 });
 
-// Fallback for SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// OpenAI backup endpoint
+app.post('/api/openai', async (req, res) => {
+  try {
+    const { query } = req.body;
+    
+    if (OPENAI_API_KEY === 'your-actual-openai-key-here') {
+      return res.json({ success: false, error: 'OpenAI API key not configured' });
+    }
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: `You are InfoHealth AI. Answer: ${query}` }],
+        max_tokens: 1000,
+        temperature: 0.3
+      })
+    });
+
+    const data = await response.json();
+    res.json({ 
+      success: true, 
+      response: data.choices[0].message.content 
+    });
+
+  } catch (error) {
+    console.error('❌ OpenAI API Error:', error.message);
+    res.json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
 });
 
-app.listen(port, () => {
-  console.log(`✅ Server running on http://localhost:${port}`);
+// Explicit route for root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 InfoHealth AI server running at http://localhost:${PORT}`);
+  console.log('📝 Open your browser to http://localhost:3000 to use the app');
+  console.log('📁 Serving files from:', __dirname);
 });
