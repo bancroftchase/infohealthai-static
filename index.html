@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfoHealth AI</title>
+    <!-- Your CSS and other head content here -->
+</head>
+<body>
+    <!-- Your HTML content here -->
+
 <script>
     // Wait for DOM to be fully loaded before executing JavaScript
     document.addEventListener('DOMContentLoaded', function() {
@@ -6,6 +17,12 @@
         const mainApp = document.getElementById('mainApp');
         const chatBox = document.getElementById('chatBox');
         const userInput = document.getElementById('userInput');
+
+        // Check if elements exist before using them
+        if (!splashScreen || !mainApp || !chatBox || !userInput) {
+            console.error('Critical elements not found in DOM');
+            return;
+        }
 
         // Show splash screen for 3 seconds
         setTimeout(() => {
