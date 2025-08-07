@@ -1,909 +1,2087 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfoHealth AI</title>
-    <!-- Your CSS and other head content here -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InfoHealth AI – General Medicine</title>
+  <link rel="icon" href="public/logo-silver.png" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 25%, #3c3c3c 50%, #2a2a2a 75%, #000000 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mobile-frame {
+      width: 100%;
+      max-width: 380px;
+      height: 90vh;
+      max-height: 800px;
+      background: linear-gradient(145deg, #000000 0%, #1a1a1a 50%, #2c2c2c 100%);
+      border-radius: 35px;
+      padding: 8px;
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 30px rgba(218, 165, 32, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mobile-frame::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, #333 0%, #555 50%, #333 100%);
+      border-radius: 2px;
+      z-index: 10;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: 27px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2c2c2c 100%);
+      padding: 1rem 1rem 0.5rem 1rem;
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .translate-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+      color: white;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(218, 165, 32, 0.3);
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    
+    .translate-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(218, 165, 32, 0.4);
+    }
+    
+    .translate-btn.active {
+      background: linear-gradient(135deg, #B8860B 0%, #8B6914 100%);
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(218,165,32,0.1) 100%);
+      pointer-events: none;
+    }
+    
+    .header img {
+      height: 80px;
+      max-width: 90%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+      position: relative;
+      z-index: 1;
+    }
+
+    .cards-container {
+      background: #f8f9fa;
+      padding: 0.5rem;
+      border-bottom: 2px solid #e0e0e0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .cards-section {
+      margin-bottom: 0.4rem;
+    }
+    .cards-section:last-child {
+      margin-bottom: 0;
+    }
+    .cards-section h3 {
+      margin: 0 0 0.3rem 0;
+      color: #333;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.25rem;
+    }
+    .card {
+      background: white;
+      padding: 0.4rem 0.2rem;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      line-height: 1.1;
+    }
+
+    .card:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      border-color: #DAA520;
+    }
+
+    .chat {
+      flex: 1;
+      padding: 0.8rem !important;
+      overflow-y: auto;
+      background: white;
+    }
+    .bubble-wrapper {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+      align-items: flex-end;
+    }
+    .bubble-wrapper.user {
+      flex-direction: row-reverse;
+    }
+    .avatar img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      padding: 2px;
+      border: 1px solid rgba(218, 165, 32, 0.3);
+    }
+    .message {
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      max-width: 75%;
+      line-height: 1.5;
+      font-size: 0.9rem;
+      word-wrap: break-word;
+    }
+    
+    .message ul, .message ol {
+      margin: 0.5rem 0;
+      padding-left: 1.2rem;
+      list-style-position: inside;
+    }
+    
+    .message li {
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+      list-style-type: disc;
+    }
+    
+    .message p {
+      margin: 0.5rem 0;
+      line-height: 1.4;
+    }
+    
+    .message strong {
+      display: block;
+      margin: 0.8rem 0 0.4rem 0;
+      color: #DAA520;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.2rem;
+    }
+    .user .message {
+      background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+    }
+    .bot .message {
+      background: #f8f9fa;
+      color: #333;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .welcome-message {
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #555;
+      padding: 0.8rem 1rem;
+      list-style: none !important;
+    }
+    
+    .welcome-message * {
+      list-style: none !important;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .welcome-message::before,
+    .welcome-message::after {
+      content: none !important;
+    }
+
+    .ai-status {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin: 0.5rem auto 0 auto;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+    }
+
+    .input-area {
+      display: flex;
+      padding: 0.8rem;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      outline: none;
+      font-size: 0.9rem;
+    }
+    .input-area input:focus {
+      border-color: #DAA520;
+    }
+    .input-area button {
+      margin-left: 0.6rem;
+      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(218, 165, 32, 0.3);
+    }
+
+    /* Form styles */
+    .form-container {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      border: 1px solid #e0e0e0;
+    }
+    .form-container h3 {
+      margin: 0 0 0.8rem 0;
+      color: #333;
+      font-size: 1rem;
+    }
+    .form-group {
+      margin-bottom: 0.8rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+      color: #555;
+      font-size: 0.85rem;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: #DAA520;
+    }
+    .btn {
+      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: 0.4rem;
+      font-size: 0.75rem;
+      box-shadow: 0 2px 6px rgba(218, 165, 32, 0.3);
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    
+    .btn-home {
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.75rem;
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.3);
+    }
+    
+    .btn-home:hover {
+      background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+      transform: translateY(-1px);
+    }
+
+    /* Modal styles for appointment popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 90%;
+      width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .appointment-item {
+      background: white;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border-left: 4px solid #0d47a1;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .appointment-item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      border-left-color: #DAA520;
+    }
+    
+    .appointment-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+    
+    .appointment-doctor {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    
+    .appointment-type {
+      font-size: 0.75rem;
+      color: #666;
+      text-transform: uppercase;
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    
+    .appointment-datetime {
+      color: #0d47a1;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+    
+    .appointment-location {
+      color: #666;
+      font-size: 0.8rem;
+      margin: 2px 0;
+    }
+    
+    .appointment-notes {
+      color: #888;
+      font-size: 0.8rem;
+      font-style: italic;
+      margin-top: 4px;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .btn-edit {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      flex: 1;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+    }
+    
+    .btn-cancel {
+      background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+      flex: 1;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+    }
+    
+    /* Calendar grid styles */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin: 1rem 0;
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 4px;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      padding: 0 0.5rem;
+    }
+    
+    .calendar-nav {
+      background: #DAA520;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .calendar-nav:hover {
+      background: #B8860B;
+    }
+    
+    .calendar-month-year {
+      font-weight: 600;
+      color: #333;
+      font-size: 1rem;
+    }
+    
+    .calendar-day-header {
+      text-align: center;
+      font-weight: 600;
+      color: #666;
+      padding: 8px 4px;
+      font-size: 0.7rem;
+      background: #e9ecef;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 0.8rem;
+      cursor: pointer;
+      position: relative;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .calendar-day:hover {
+      background: #f8f9fa;
+      transform: scale(1.05);
+    }
+    
+    .calendar-day.other-month {
+      color: #ccc;
+      background: #f8f9fa;
+    }
+    
+    .calendar-day.today {
+      background: #DAA520;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .calendar-day.has-appointment {
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      color: white;
+      font-weight: bold;
+    }
+    
+    .calendar-day.has-appointment.today {
+      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
+    }
+    
+    .calendar-day.has-appointment::after {
+      content: '📋';
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      font-size: 0.6rem;
+    }
+    
+    .appointment-popup {
+      position: absolute;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.8rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 100;
+      max-width: 250px;
+      font-size: 0.8rem;
+    }
+    
+    /* Medical info styles */
+    .info-section {
+      background: white;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border-left: 3px solid #28a745;
+    }
+    
+    .info-section h4 {
+      margin: 0 0 0.5rem 0;
+      color: #28a745;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .info-item {
+      background: #f8f9fa;
+      padding: 0.5rem;
+      margin: 0.3rem 0;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .medication-item {
+      border-left: 3px solid #17a2b8;
+    }
+    
+    .medication-time {
+      background: #17a2b8;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 450px) {
+      body {
+        padding: 10px;
+      }
+      .mobile-frame {
+        max-width: 100%;
+        height: 95vh;
+        border-radius: 25px;
+      }
+      .wrapper {
+        border-radius: 17px;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Your HTML content here -->
+  <div class="mobile-frame">
+    <div class="wrapper">
+      <div class="header">
+        <button class="translate-btn" id="translateBtn" onclick="toggleLanguage()">Español</button>
+        <img src="./infohealth-logo.png" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
+      </div>
 
-<script>
-    // Wait for DOM to be fully loaded before executing JavaScript
-    document.addEventListener('DOMContentLoaded', function() {
-        // Splash Screen Logic
-        const splashScreen = document.getElementById('splashScreen');
-        const mainApp = document.getElementById('mainApp');
-        const chatBox = document.getElementById('chatBox');
-        const userInput = document.getElementById('userInput');
+      <div class="cards-container">
+        <div class="cards-section">
+          <h3>Medical Conditions</h3>
+          <div class="cards">
+            <div class="card" onclick="sendMessage('What is hypertension and how is it treated?')">Hypertension</div>
+            <div class="card" onclick="sendMessage('Explain high cholesterol causes and treatments')">Cholesterol</div>
+            <div class="card" onclick="sendMessage('How is asthma diagnosed and managed?')">Asthma</div>
+            <div class="card" onclick="sendMessage('What is diabetes and how do I manage blood sugar?')">Diabetes</div>
+          </div>
+        </div>
 
-        // Check if elements exist before using them
-        if (!splashScreen || !mainApp || !chatBox || !userInput) {
-            console.error('Critical elements not found in DOM');
-            return;
+        <div class="cards-section">
+          <h3>Health Management</h3>
+          <div class="cards">
+            <div class="card" onclick="showCalendar()">Calendar</div>
+            <div class="card" onclick="showMyInfo()">My Info</div>
+            <div class="card" onclick="showAppointments(); openVideo('https://infohealthai.com/media/appointments.mp4')">Appointments</div>
+            <div class="card" onclick="showMedications()">Medications</div>
+          </div>
+        </div>
+
+        <div class="cards-section">
+          <h3>Health Tools</h3>
+          <div class="cards">
+            <div class="card" onclick="showDrugChecker()">Drug Checker</div>
+            <div class="card" onclick="showHealthTracker()">Health Tracker</div>
+            <div class="card" onclick="showReminders()">Reminders</div>
+            <div class="card" onclick="showEmergencyInfo()">Emergency</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat" id="chatBox">
+        <div style="display: flex; align-items: flex-start; margin-bottom: 0.8rem; justify-content: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; margin-right: 0.4rem;">
+            <img src="./infohealth-logo-small.png" alt="InfoHealth AI" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 12px; padding: 12px 16px; max-width: calc(75% - 32px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-family: 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.4; color: #555; box-sizing: border-box;">
+            <span style="display: block; text-align: center; width: 100%;">Welcome to InfoHealth AI. I provide health information for educational purposes. Always consult healthcare professionals for diagnosis and treatment.</span>
+            <div class="ai-status" id="aiStatus">📚 Knowledge-Based Responses</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="Ask a medical question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    let isProcessing = false;
+
+    // Simple toggle language function
+    function toggleLanguage() {
+      const comingSoonMessage = "**Traducción al Español - Próximamente**\n\nLa función de traducción completa estará disponible pronto. Por ahora, puede continuar usando InfoHealth AI en inglés para obtener información médica precisa.\n\n*Complete Spanish translation feature coming soon. You can continue using InfoHealth AI in English for accurate medical information.*";
+      addBubble(comingSoonMessage, 'bot', true);
+    }
+
+    // Local Storage Functions
+    function saveToLocal(key, data) {
+      localStorage.setItem('infohealth_' + key, JSON.stringify(data));
+    }
+
+    function getFromLocal(key) {
+      const data = localStorage.getItem('infohealth_' + key);
+      if (data) {
+        return JSON.parse(data);
+      }
+      if (key === 'myInfo') return {};
+      return [];
+    }
+
+    // Typewriter effect function
+    function typeWriter(element, text, speed = 40) {
+      let i = 0;
+      element.innerHTML = '';
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Add message with typewriter effect
+    function addBubble(text, role, useTypewriter = false) {
+      const wrap = document.createElement('div');
+      wrap.className = `bubble-wrapper ${role}`;
+
+      const avatar = role === 'user' 
+        ? './infohealth-user-logo.png'
+        : './infohealth-logo-small.png';
+
+      wrap.innerHTML = `
+        <div class="avatar"><img src="${avatar}" alt="${role}" /></div>
+        <div class="message"></div>`;
+
+      chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const messageElement = wrap.querySelector('.message');
+
+      if (useTypewriter && role === 'bot') {
+        typeWriter(messageElement, text, 30);
+      } else {
+        messageElement.innerHTML = text;
+      }
+    }
+
+    // Update AI status indicator
+    function updateAIStatus(status, type = 'success') {
+      const statusElement = document.getElementById('aiStatus');
+      if (statusElement) {
+        statusElement.textContent = status;
+        if (type === 'error') {
+          statusElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #e74c3c 100%)';
+        } else if (type === 'warning') {
+          statusElement.style.background = 'linear-gradient(135deg, #ffc107 0%, #e0a800 100%)';
+        } else {
+          statusElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+        }
+      }
+    }
+
+    // Go back to home/welcome screen
+    function goHome() {
+      clearAllChatMessages();
+    }
+
+    // Clear all chat messages except welcome message
+    function clearAllChatMessages() {
+      const allMessages = chatBox.querySelectorAll('.bubble-wrapper');
+      for (let i = 1; i < allMessages.length; i++) {
+        chatBox.removeChild(allMessages[i]);
+      }
+    }
+
+    // Enhanced medical response with drug interactions and diabetes focus
+    function getMedicalResponse(query, aiCategory = null) {
+      const disclaimer = "*Consult healthcare professionals for medical advice.*\n\n";
+      const queryLower = query.toLowerCase();
+      
+      // HYPERTENSION with Drug Interactions
+      if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || queryLower.includes('high pressure') || queryLower.includes('manage blood pressure') || queryLower.includes('bp')) {
+        return `${disclaimer}**Hypertension (High Blood Pressure)**
+
+**What It Is:**
+Blood pressure consistently 130/80 mmHg or higher. The "silent killer" because it often has no symptoms.
+
+**Risk Factors:**
+• Family history and genetics
+• Age (risk increases with age)  
+• Obesity and physical inactivity
+• High sodium diet and excessive alcohol
+• Smoking and chronic stress
+
+**Management:**
+• DASH diet (fruits, vegetables, whole grains)
+• Limit sodium to 2,300mg daily
+• Exercise 150 minutes weekly
+• Maintain healthy weight
+• Monitor blood pressure regularly
+
+**Common Medications:**
+• **ACE Inhibitors** (lisinopril, enalapril)
+• **ARBs** (losartan, valsartan)
+• **Diuretics** (hydrochlorothiazide, furosemide)
+• **Beta-blockers** (metoprolol, atenolol)
+• **Calcium Channel Blockers** (amlodipine, nifedipine)
+
+---
+
+**⚠️ DRUG INTERACTIONS:**
+• **NSAIDs** (ibuprofen, naproxen) - can reduce BP medication effectiveness
+• **Decongestants** (pseudoephedrine) - can raise blood pressure
+• **Salt substitutes** with potassium - dangerous with ACE inhibitors/ARBs
+• **Grapefruit juice** - affects calcium channel blockers
+• **Alcohol** - can enhance BP medication effects causing dizziness
+
+**Target:** Less than 130/80 mmHg for most adults`;
+      }
+
+      // CHOLESTEROL with Drug Interactions
+      if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl') || queryLower.includes('manage cholesterol') || queryLower.includes('statins')) {
+        return `${disclaimer}**High Cholesterol**
+
+**Types:**
+• LDL "bad" cholesterol - builds up in arteries
+• HDL "good" cholesterol - removes cholesterol
+• Triglycerides - blood fats that increase heart risk
+
+**Risk Factors:**
+• Genetics and family history
+• Diet high in saturated/trans fats
+• Lack of exercise and obesity
+• Smoking and diabetes
+
+**Management:**
+• Reduce saturated fats (red meat, full-fat dairy)
+• Increase soluble fiber (oats, beans, apples)
+• Exercise regularly and maintain healthy weight
+• Don't smoke and limit alcohol
+
+**Common Medications:**
+• **Statins** (atorvastatin, simvastatin, rosuvastatin)
+• **Bile Acid Sequestrants** (cholestyramine)
+• **Ezetimibe** (Zetia)
+• **PCSK9 Inhibitors** (evolocumab, alirocumab)
+
+---
+
+**⚠️ DRUG INTERACTIONS:**
+• **Grapefruit juice** - dangerous with statins, can cause muscle damage
+• **Warfarin** - statins can increase bleeding risk
+• **Digoxin** - levels can increase with some statins
+• **Cyclosporine** - increases statin toxicity risk
+• **Gemfibrozil** - very dangerous with statins, avoid combination
+
+---
+
+• **Antacids** - reduce absorption of some cholesterol medications
+
+**Target Levels:**
+• Total cholesterol: <200 mg/dL
+• LDL: <100 mg/dL  
+• HDL: >40 mg/dL (men), >50 mg/dL (women)
+• Triglycerides: <150 mg/dL`;
+      }
+
+      // ASTHMA with Drug Interactions
+      if (queryLower.includes('asthma') || queryLower.includes('inhaler') || queryLower.includes('wheezing') || queryLower.includes('manage asthma') || queryLower.includes('albuterol') || queryLower.includes('ventolin')) {
+        return `${disclaimer}**Asthma**
+
+**Common Symptoms:**
+• Wheezing and shortness of breath
+• Chest tightness and coughing
+• Difficulty speaking in full sentences
+
+**Common Triggers:**
+• Allergens: pollen, dust mites, pet dander
+• Irritants: smoke, pollution, strong scents
+• Weather changes and cold air
+• Exercise and respiratory infections
+
+**Management:**
+• Use controller medications daily as prescribed
+• Keep rescue inhaler always available
+• Avoid known triggers
+• Monitor peak flow if recommended
+• Get annual flu vaccination
+
+**Common Medications:**
+• **Rescue Inhalers** (albuterol/Ventolin, levalbuterol)
+• **Controller Inhalers** (fluticasone, budesonide, beclomethasone)
+• **Combination Inhalers** (Advair, Symbicort, Breo)
+• **Long-acting bronchodilators** (salmeterol, formoterol)
+
+---
+
+**⚠️ DRUG INTERACTIONS:**
+• **Beta-blockers** - can trigger severe asthma attacks, avoid if possible
+• **Aspirin/NSAIDs** - can trigger asthma attacks in sensitive people
+• **ACE inhibitors** - may cause cough that worsens asthma
+• **Some eye drops** (timolol) - contain beta-blockers, avoid
+• **Decongestants** - can interact with some asthma medications
+
+**Emergency Signs:**
+• Severe shortness of breath
+• Cannot speak in full sentences
+• Blue lips or fingernails
+• No improvement with rescue inhaler - CALL 911`;
+      }
+
+      // COMPREHENSIVE DIABETES with Drug Interactions
+      if (queryLower.includes('diabetes') || queryLower.includes('diabetic') || queryLower.includes('blood sugar') || queryLower.includes('glucose') || queryLower.includes('insulin') || queryLower.includes('a1c') || queryLower.includes('manage diabetes') || queryLower.includes('metformin')) {
+        return `${disclaimer}**Diabetes Management**
+
+**What Is Diabetes:**
+A condition where blood glucose (sugar) levels stay too high due to problems with insulin production or function.
+
+**Types:**
+• **Type 1** - Body doesn't make insulin (autoimmune)
+• **Type 2** - Body doesn't use insulin well (most common)
+• **Gestational** - Develops during pregnancy
+
+**Common Symptoms:**
+• Increased thirst and frequent urination
+• Unexplained weight loss or gain
+• Increased hunger and fatigue
+• Blurred vision and slow-healing sores
+• Frequent infections
+
+**Blood Sugar Management:**
+• **Target Before Meals:** 80-130 mg/dL
+• **Target 2 Hours After Meals:** Less than 180 mg/dL
+• **A1C Target:** Less than 7% for most adults
+• **Monitor regularly** with glucose meter or continuous monitor
+
+**Common Medications:**
+• **Metformin** - First-line for Type 2, reduces glucose production
+• **Insulin** (rapid, long-acting) - Essential for Type 1, sometimes Type 2
+• **Sulfonylureas** (glipizide, glyburide) - Stimulate insulin release
+• **GLP-1 Agonists** (semaglutide, liraglutide) - Improve insulin sensitivity
+• **SGLT-2 Inhibitors** (empagliflozin, canagliflozin) - Help kidneys remove glucose
+
+---
+
+**⚠️ DRUG INTERACTIONS:**
+• **Alcohol** - can cause dangerous low blood sugar, especially with insulin/sulfonylureas
+• **Beta-blockers** - can mask low blood sugar symptoms and affect glucose levels
+• **Steroids** (prednisone) - significantly raise blood sugar levels
+• **Diuretics** - can raise blood sugar and interact with diabetes medications
+• **Quinolone antibiotics** - can cause dangerous blood sugar swings
+
+---
+
+• **Warfarin** - diabetes medications can affect blood clotting
+• **Contrast dyes** - must stop metformin before procedures
+
+**Lifestyle Management:**
+• **Carbohydrate counting** and consistent meal timing
+• **Regular exercise** (150 minutes weekly)
+• **Weight management**
+• **Stress management** and adequate sleep
+• **Regular foot, eye, and kidney checkups**
+
+---
+
+**Complications Prevention:**
+• Keep blood sugar in target range
+• Control blood pressure (<130/80) and cholesterol
+• Don't smoke and limit alcohol
+• Take medications as prescribed
+• Regular medical monitoring
+
+**Emergency Situations:**
+• **Blood sugar >300 mg/dL** - Seek immediate care
+• **Signs of DKA:** Nausea, vomiting, fruity breath, confusion
+• **Severe low blood sugar:** Confusion, sweating, unconsciousness - Give glucose/call 911`;
+      }
+
+      // Enhanced keyword detection for diabetes-related queries
+      if (queryLower.includes('what is insulin') || queryLower.includes('insulin shots') || queryLower.includes('diabetic medication')) {
+        return `${disclaimer}**Insulin and Diabetes Medications**
+
+**What Is Insulin:**
+A hormone made by the pancreas that acts like a "key" to let glucose into your cells for energy.
+
+**Types of Insulin:**
+• **Rapid-acting** (lispro, aspart) - Works in 15 minutes, lasts 3-4 hours
+• **Short-acting** (regular insulin) - Works in 30 minutes, lasts 6-8 hours  
+• **Intermediate-acting** (NPH) - Works in 1-2 hours, lasts 12-18 hours
+• **Long-acting** (glargine, detemir) - Works in 1-2 hours, lasts 24+ hours
+
+---
+
+**Non-Insulin Medications:**
+• **Metformin** - Reduces glucose production by liver
+• **Sulfonylureas** - Help pancreas make more insulin
+• **GLP-1 agonists** - Slow digestion, reduce appetite
+• **SGLT-2 inhibitors** - Help kidneys remove excess glucose
+
+---
+
+**⚠️ Key Drug Interactions:**
+• **Alcohol + Insulin/Sulfonylureas** - Dangerous low blood sugar
+• **Steroids** - Significantly raise blood sugar
+• **Beta-blockers** - Can mask low blood sugar symptoms
+
+**Injection Tips:**
+• Rotate injection sites to prevent lipodystrophy
+• Store insulin properly (refrigerate unopened, room temp when in use)
+• Never share needles or insulin pens
+• Check expiration dates regularly`;
+      }
+
+      return `I specialize in **Hypertension, Cholesterol, Asthma, and Diabetes**.
+
+Try asking:
+• "How do I manage high blood pressure?"  
+• "What are drug interactions with statins?"
+• "How do I manage asthma?"
+• "What is insulin and how does it work?"
+• "What are diabetes medications?"
+
+Click the topic cards above for quick access!`;
+    }
+
+    // Calendar Functions
+    let currentCalendarDate = new Date();
+
+    function showCalendar() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Calendar', 'user');
+      const calendarHTML = `
+        <div class="form-container">
+          <h3>My Calendar</h3>
+          <div class="calendar-header">
+            <button class="calendar-nav" onclick="changeMonth(-1)">‹ Prev</button>
+            <div class="calendar-month-year" id="monthYear"></div>
+            <button class="calendar-nav" onclick="changeMonth(1)">Next ›</button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <div id="selectedDateEvents" style="margin-top: 1rem;"></div>
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+            <h4 style="margin-bottom: 0.5rem; color: #333;">➕ Add New Event</h4>
+            <div class="form-group">
+              <label>Event Title:</label>
+              <input type="text" id="eventTitle" placeholder="Doctor visit, medication reminder, etc.">
+            </div>
+            <div class="form-group">
+              <label>Date & Time:</label>
+              <input type="datetime-local" id="eventDateTime">
+            </div>
+            <div class="form-group">
+              <label>Description:</label>
+              <textarea id="eventDescription" placeholder="Event details"></textarea>
+            </div>
+            <button class="btn" onclick="addCalendarEvent()">📅 Add Event</button>
+          </div>
+          <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(calendarHTML, 'bot');
+      setTimeout(() => {
+        renderCalendar();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function changeMonth(direction) {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      
+      const monthYearElement = document.getElementById('monthYear');
+      const gridElement = document.getElementById('calendarGrid');
+      
+      if (!monthYearElement || !gridElement) return;
+
+      monthYearElement.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
+      gridElement.innerHTML = '';
+
+      dayNames.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day-header';
+        dayHeader.textContent = day;
+        gridElement.appendChild(dayHeader);
+      });
+
+      const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+      const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const startingDayOfWeek = firstDay.getDay();
+
+      const appointments = getFromLocal('appointments');
+      const events = getFromLocal('calendar');
+      const allEvents = [...appointments, ...events];
+
+      const prevMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 0);
+      for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day other-month';
+        dayElement.textContent = prevMonth.getDate() - i;
+        gridElement.appendChild(dayElement);
+      }
+
+      const today = new Date();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = day;
+
+        const currentDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), day);
+        
+        if (currentDay.toDateString() === today.toDateString()) {
+          dayElement.classList.add('today');
         }
 
-        // Show splash screen for 3 seconds
-        setTimeout(() => {
-            splashScreen.classList.add('fade-out');
-            mainApp.classList.add('show');
-            
-            // Remove splash screen from DOM after transition
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-            }, 1000);
-        }, 3000);
-
-        // Clear chat function
-        function clearChat() {
-            chatBox.innerHTML = '';
-        }
-
-        // Home function - clears chat and closes any open modals
-        function goHome() {
-            // Clear the chat
-            clearChat();
-            
-            // Close any open modals
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                modal.style.display = 'none';
-            });
-            
-            // Clear the input field
-            userInput.value = '';
-            
-            // Show a clean welcome message
-            setTimeout(() => {
-                addBubble('🏠 Welcome back to InfoHealth AI! Choose a medical condition above to learn more, or use the Health Management tools to track your health data. You can also ask me any medical questions.', 'bot', false);
-            }, 100);
-        }
-
-        // Add message function with typewriter effect
-        function addBubble(text, role, useTypewriter = false) {
-            const wrap = document.createElement('div');
-            wrap.className = 'bubble-wrapper ' + role;
-
-            const avatar = role === 'user' 
-                ? '/public/infohealth-user-logo.png'
-                : '/public/infohealth-logo-small.png';
-
-            wrap.innerHTML = '<div class="avatar"><img src="' + avatar + '" alt="' + role + '" /></div><div class="message"></div>';
-            
-            const messageDiv = wrap.querySelector('.message');
-            chatBox.appendChild(wrap);
-
-            // Add home button to bot responses (but not to the welcome message)
-            const shouldAddHomeButton = role === 'bot' && !text.includes('🏠 Welcome back');
-            const finalText = shouldAddHomeButton ? text + '<br><br><div style="text-align: center; margin-top: 15px;"><button class="btn-secondary" onclick="goHome()" style="padding: 8px 16px; border-radius: 20px; font-size: 0.85rem;">🏠 Back to Home</button></div>' : text;
-
-            if (useTypewriter && role === 'bot') {
-                // Typewriter effect for bot responses
-                let i = 0;
-                const speed = 10; // milliseconds per character
-                
-                function typeWriter() {
-                    if (i < finalText.length) {
-                        messageDiv.innerHTML = finalText.substring(0, i + 1);
-                        i++;
-                        setTimeout(typeWriter, speed);
-                        // Auto-scroll as we type
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                    }
-                }
-                typeWriter();
-            } else {
-                // Instant display for user messages and welcome messages
-                messageDiv.innerHTML = finalText;
-                setTimeout(() => {
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }, 100);
-            }
-        }
-
-        function getMedicalResponse(query) {
-            const disclaimer = '<div style="background-color: #f0f8ff; border-left: 4px solid #DAA520; padding: 10px; margin-bottom: 15px; font-weight: bold; color: #2c5aa0;">⚠️ Consult healthcare professionals for medical advice.</div>';
-            const queryLower = query.toLowerCase();
-
-            // ========== HYPERTENSION CARD ==========
-            if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || queryLower.includes('high bp')) {
-                return disclaimer + `
-                <img src="infohealth-professional-1.jpg" alt="Hypertension Management" class="medical-image">
-                
-                <strong>HYPERTENSION: COMPLETE CLINICAL GUIDE</strong><br><br>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                    <div>
-                        <strong>📊 Blood Pressure Classification (AHA 2023)</strong>
-                        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
-                            <tr style="background-color: #f2f2f2;"><th>Category</th><th>Systolic</th><th>Diastolic</th></tr>
-                            <tr><td>Normal</td><td><120</td><td><80</td></tr>
-                            <tr><td>Elevated</td><td>120-129</td><td><80</td></tr>
-                            <tr><td>Stage 1</td><td>130-139</td><td>80-89</td></tr>
-                            <tr><td>Stage 2</td><td>≥140</td><td>≥90</td></tr>
-                            <tr style="background-color: #ffdddd;"><td>Crisis</td><td>>180</td><td>>120</td></tr>
-                        </table>
-                    </div>
-                    <div>
-                        <strong>💊 First-Line Medications</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>ACE Inhibitors:</strong> Lisinopril 10-40mg daily</li>
-                            <li><strong>ARBs:</strong> Losartan 50-100mg daily</li>
-                            <li><strong>CCBs:</strong> Amlodipine 5-10mg daily</li>
-                            <li><strong>Thiazides:</strong> HCTZ 12.5-25mg daily</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>🌿 Evidence-Based Lifestyle Modifications</strong>
-                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ul>
-                        <li><strong>DASH Diet:</strong> 8-10 servings fruits/vegetables daily (SBP↓ 8-14 mmHg)</li>
-                        <li><strong>Na+ Restriction:</strong> <2.3g/day (ideal 1.5g) (SBP↓ 5-6 mmHg)</li>
-                        <li><strong>Exercise:</strong> 150 mins/week moderate activity (SBP↓ 5-8 mmHg)</li>
-                        <li><strong>Weight Loss:</strong> 5-10% reduction (SBP↓ 5-20 mmHg per 10kg)</li>
-                    </ul>
-                </div>
-
-                <strong>🚨 Hypertensive Emergency</strong>
-                <div style="background-color: #fff3f5; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    BP >180/120 WITH end-organ damage:
-                    <ul>
-                        <li>Encephalopathy</li>
-                        <li>Retinal hemorrhages</li>
-                        <li>Pulmonary edema</li>
-                        <li>Aortic dissection</li>
-                    </ul>
-                    <em>Requires ICU admission and IV antihypertensives</em>
-                </div>
-
-                <strong>📈 Home Monitoring Protocol</strong>
-                <ol style="margin: 10px 0; padding-left: 20px;">
-                    <li>Rest 5 mins in chair with back support</li>
-                    <li>Use validated upper-arm cuff</li>
-                    <li>Take 2-3 readings 1 min apart (AM/PM)</li>
-                    <li>Record all readings (not just averages)</li>
-                    <li>Bring log to all appointments</li>
-                </ol>`;
-            }
-
-            // ========== CHOLESTEROL CARD ==========
-            if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl')) {
-                return disclaimer + `
-                <img src="infohealth-professional-2.jpg" alt="Cholesterol Management" class="medical-image">
-                
-                <strong>LIPID MANAGEMENT: COMPLETE GUIDE</strong><br><br>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                    <div>
-                        <strong>📊 Lipid Targets (ACC 2023)</strong>
-                        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
-                            <tr style="background-color: #f2f2f2;"><th>Parameter</th><th>Optimal</th><th>High Risk</th></tr>
-                            <tr><td>LDL-C</td><td><100</td><td><70</td></tr>
-                            <tr><td>Non-HDL-C</td><td><130</td><td><100</td></tr>
-                            <tr><td>ApoB</td><td><90</td><td><65</td></tr>
-                            <tr><td>Triglycerides</td><td><150</td><td><100</td></tr>
-                        </table>
-                    </div>
-                    <div>
-                        <strong>💊 Treatment Options</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>High-Intensity Statins:</strong> Atorvastatin 40-80mg (LDL↓ 50%)</li>
-                            <li><strong>Ezetimibe:</strong> 10mg daily (LDL↓ 15-20%)</li>
-                            <li><strong>PCSK9i:</strong> Evolocumab 140mg q2wk (LDL↓ 60%)</li>
-                            <li><strong>Bempedoic Acid:</strong> 180mg daily (LDL↓ 25%)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>🍽 Therapeutic Lifestyle Changes</strong>
-                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ul>
-                        <li><strong>Soluble Fiber:</strong> 5-10g/day (LDL↓ 3-5%)</li>
-                        <li><strong>Plant Sterols:</strong> 2g/day (LDL↓ 6-15%)</li>
-                        <li><strong>Omega-3s:</strong> EPA+DHA 2-4g/day (TG↓ 20-40%)</li>
-                        <li><strong>Exercise:</strong> 200-300 mins/week (HDL↑ 5-10%)</li>
-                    </ul>
-                </div>
-
-                <strong>⚠️ Statin Intolerance Management</strong>
-                <div style="background-color: #fff8e6; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ol>
-                        <li>Confirm true intolerance (muscle symptoms + CK elevation)</li>
-                        <li>Try alternate statin (e.g., fluvastatin XL)</li>
-                        <li>Consider every-other-day rosuvastatin</li>
-                        <li>Non-statin alternatives if persistent</li>
-                    </ol>
-                </div>
-
-                <strong>🔍 Screening Recommendations</strong>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                    <li><strong>All adults:</strong> Fasting lipid panel at least every 5 years</li>
-                    <li><strong>High risk:</strong> Annual testing</li>
-                    <li><strong>FH screening:</strong> LDL >190 mg/dL or premature CAD</li>
-                </ul>`;
-            }
-
-            // ========== DIABETES CARD ==========
-            if (queryLower.includes('diabetes') || queryLower.includes('blood sugar') || queryLower.includes('a1c')) {
-                return disclaimer + `
-                <img src="infohealth-professional-4.jpg" alt="Diabetes Management" class="medical-image">
-                
-                <strong>DIABETES MELLITUS: COMPLETE GUIDE</strong><br><br>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                    <div>
-                        <strong>🔍 Diagnostic Criteria (ADA 2024)</strong>
-                        <table style="width:100%; border-collapse: collapse; margin: 5px 0; font-size: 0.9rem;">
-                            <tr style="background-color: #f2f2f2;"><th>Test</th><th>Prediabetes</th><th>Diabetes</th></tr>
-                            <tr><td>Fasting Glucose</td><td>100-125</td><td>≥126</td></tr>
-                            <tr><td>A1C</td><td>5.7-6.4%</td><td>≥6.5%</td></tr>
-                            <tr><td>OGTT</td><td>140-199</td><td>≥200</td></tr>
-                        </table>
-                    </div>
-                    <div>
-                        <strong>🎯 Treatment Targets</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>A1C:</strong> <7% (most adults)</li>
-                            <li><strong>Fasting:</strong> 80-130 mg/dL</li>
-                            <li><strong>Postprandial:</strong> <180 mg/dL</li>
-                            <li><strong>Time in Range:</strong> >70% (70-180 mg/dL)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>💉 Medication Classes</strong>
-                <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
-                    <tr style="background-color: #f2f2f2;">
-                        <th>Class</th>
-                        <th>Examples</th>
-                        <th>A1C ↓</th>
-                        <th>Key Benefits</th>
-                    </tr>
-                    <tr><td>Biguanides</td><td>Metformin</td><td>1-1.5%</td><td>First-line, weight neutral</td></tr>
-                    <tr><td>SGLT2i</td><td>Empagliflozin</td><td>0.5-1%</td><td>Cardio/renal protection</td></tr>
-                    <tr><td>GLP-1 RA</td><td>Semaglutide</td><td>1-1.5%</td><td>Weight loss, CV benefit</td></tr>
-                    <tr><td>Insulin</td><td>Various</td><td>1.5-3.5%</td><td>Most potent</td></tr>
-                </table>
-
-                <strong>🚨 Diabetes Emergencies</strong>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 10px 0;">
-                    <div style="background-color: #fff3cd; padding: 10px; border-radius: 5px;">
-                        <strong>Hypoglycemia (<70 mg/dL)</strong>
-                        <ul>
-                            <li><strong>Mild:</strong> 15g fast carbs (4oz juice)</li>
-                            <li><strong>Severe:</strong> Glucagon IM if unconscious</li>
-                            <li><strong>Rebound:</strong> Protein snack after treatment</li>
-                        </ul>
-                    </div>
-                    <div style="background-color: #f8d7da; padding: 10px; border-radius: 5px;">
-                        <strong>DKA (BG >250 + ketones)</strong>
-                        <ul>
-                            <li>IV fluids + insulin drip</li>
-                            <li>Monitor K+ closely</li>
-                            <li>Search for precipitant</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>🍽 Medical Nutrition Therapy</strong>
-                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ul>
-                        <li><strong>Carb Counting:</strong> 45-60g per meal (consistent timing)</li>
-                        <li><strong>Plate Method:</strong> ½ non-starchy veggies, ¼ protein, ¼ carbs</li>
-                        <li><strong>Fiber:</strong> ≥14g/1000kcal (improves glycemic control)</li>
-                    </ul>
-                </div>`;
-            }
-
-            // ========== HEART DISEASE CARD ==========
-            if (queryLower.includes('heart disease') || queryLower.includes('cad') || queryLower.includes('coronary')) {
-                return disclaimer + `
-                <img src="infohealth-professional-3.jpg" alt="Heart Disease Management" class="medical-image">
-                
-                <strong>CORONARY ARTERY DISEASE: COMPLETE GUIDE</strong><br><br>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                    <div>
-                        <strong>🩺 Diagnostic Workup</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>Stress Test:</strong> ECG changes, perfusion defects</li>
-                            <li><strong>Coronary CTA:</strong> Low-intermediate risk patients</li>
-                            <li><strong>Angiography:</strong> Gold standard for stenosis</li>
-                            <li><strong>Calcium Score:</strong> Agatston score ≥100 = increased risk</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong>💊 Medical Therapy (AHA 2023)</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>High-Intensity Statin:</strong> Atorvastatin 40-80mg</li>
-                            <li><strong>Anti-platelets:</strong> Aspirin 81mg + Clopidogrel post-PCI</li>
-                            <li><strong>Beta-blockers:</strong> Metoprolol succinate post-MI</li>
-                            <li><strong>ACE-I/ARB:</strong> For LV dysfunction</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>❤️ Cardiac Rehabilitation</strong>
-                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ul>
-                        <li>36 sessions over 12 weeks</li>
-                        <li>Exercise training + education</li>
-                        <li>Mortality reduction up to 25%</li>
-                        <li>Underutilized (only 20-30% eligible patients)</li>
-                    </ul>
-                </div>
-
-                <strong>🚨 Acute Coronary Syndrome</strong>
-                <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
-                    <tr style="background-color: #f2f2f2;">
-                        <th>Type</th>
-                        <th>ECG</th>
-                        <th>Troponin</th>
-                        <th>Management</th>
-                    </tr>
-                    <tr><td>STEMI</td><td>ST ↑</td><td>+</td><td>PCI within 90 mins</td></tr>
-                    <tr><td>NSTEMI</td><td>ST ↓/T wave</td><td>+</td><td>PCI within 24-48h</td></tr>
-                    <tr><td>Unstable Angina</td><td>Normal/dynamic</td><td>-</td><td>Risk stratification</td></tr>
-                </table>
-
-                <strong>🔍 Risk Factors (ASCVD Risk Calculator)</strong>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
-                    <div>
-                        <strong>Non-Modifiable</strong>
-                        <ul>
-                            <li>Age (M >45, F >55)</li>
-                            <li>Male sex</li>
-                            <li>Family history</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong>Modifiable</strong>
-                        <ul>
-                            <li>Hypertension</li>
-                            <li>Dyslipidemia</li>
-                            <li>Diabetes</li>
-                            <li>Smoking</li>
-                        </ul>
-                    </div>
-                </div>`;
-            }
-
-            // ========== GENERAL WELLNESS CARD ==========
-            if (queryLower.includes('wellness') || queryLower.includes('prevention') || queryLower.includes('healthy lifestyle')) {
-                return disclaimer + `
-                <img src="medical-professional-5.jpg" alt="Wellness Management" class="medical-image">
-                
-                <strong>PREVENTIVE HEALTH: COMPLETE GUIDE</strong><br><br>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                    <div>
-                        <strong>🩺 Screening Recommendations</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>BP:</strong> Annually if normal</li>
-                            <li><strong>Lipids:</strong> Every 5 years from age 20</li>
-                            <li><strong>Diabetes:</strong> Screen at 35+ (or if overweight)</li>
-                            <li><strong>Colon Cancer:</strong> Colonoscopy at 45+</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong>💉 Immunizations</strong>
-                        <ul style="margin-top: 5px;">
-                            <li><strong>Influenza:</strong> Annual</li>
-                            <li><strong>COVID-19:</strong> Per CDC guidelines</li>
-                            <li><strong>Shingles:</strong> ≥50 years (Shingrix)</li>
-                            <li><strong>Pneumococcal:</strong> ≥65 years</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <strong>🍽 Dietary Guidelines (USDA 2020-2025)</strong>
-                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <ul>
-                        <li><strong>Vegetables:</strong> 2.5 cups/day</li>
-                        <li><strong>Fruits:</strong> 2 cups/day</li>
-                        <li><strong>Whole Grains:</strong> ≥3 oz-equivalents/day</li>
-                        <li><strong>Dairy:</strong> 3 cups/day (low-fat)</li>
-                        <li><strong>Protein:</strong> 5.5 oz-equivalents/day</li>
-                    </ul>
-                </div>
-
-                <strong>🏃 Physical Activity (WHO Guidelines)</strong>
-                <table style="width:100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem;">
-                    <tr style="background-color: #f2f2f2;">
-                        <th>Activity</th>
-                        <th>Frequency</th>
-                        <th>Duration</th>
-                    </tr>
-                    <tr><td>Aerobic</td><td>3-5x/week</td><td>30-60 mins</td></tr>
-                    <tr><td>Strength</td><td>2x/week</td><td>All major groups</td></tr>
-                    <tr><td>Flexibility</td><td>2-3x/week</td><td>10-15 mins</td></tr>
-                    <tr><td>Balance</td><td>3x/week</td><td>For fall prevention</td></tr>
-                </table>
-
-                <strong>😴 Sleep Hygiene</strong>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
-                    <div>
-                        <strong>Do:</strong>
-                        <ul>
-                            <li>Consistent sleep schedule</li>
-                            <li>Cool, dark environment</li>
-                            <li>Wind-down routine</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong>Avoid:</strong>
-                        <ul>
-                            <li>Caffeine after 2pm</li>
-                            <li>Screens before bed</li>
-                            <li>Alcohol near bedtime</li>
-                        </ul>
-                    </div>
-                </div>`;
-            }
-
-            // PERSONAL HEALTH INFO MANAGEMENT
-            if (queryLower.includes('personal health') || queryLower.includes('health information') || queryLower.includes('my info') ||
-                queryLower.includes('health records') || queryLower.includes('medical history')) {
-                
-                return disclaimer + '<strong>📋 PERSONAL HEALTH INFORMATION MANAGEMENT</strong><br><br><strong>Essential Health Information to Track:</strong><ul><li><strong>Current Medications:</strong> Names, dosages, times taken, prescribing doctor</li><li><strong>Medical Conditions:</strong> Diagnoses, dates diagnosed, current status</li><li><strong>Allergies:</strong> Drug allergies, food allergies, reaction descriptions</li><li><strong>Emergency Contacts:</strong> Doctor numbers, family contacts, pharmacy</li><li><strong>Insurance Info:</strong> Card photos, member ID, group numbers</li></ul><br><strong>Key Health Numbers to Know:</strong><ul><li><strong>Blood Pressure Target:</strong> Your specific goal (usually under 130/80)</li><li><strong>Cholesterol Levels:</strong> Last LDL, HDL, triglyceride results</li><li><strong>HbA1c (if diabetic):</strong> Last 3-6 month average blood sugar</li><li><strong>Weight Goal:</strong> Target BMI or weight range</li><li><strong>Heart Rate Range:</strong> Resting and target exercise rates</li></ul><br><strong>Medical History Essentials:</strong><ul><li><strong>Family History:</strong> Parents/siblings with heart disease, diabetes, high BP</li><li><strong>Previous Procedures:</strong> Surgeries, cardiac procedures, hospitalizations</li><li><strong>Previous Medications:</strong> What worked, what caused side effects</li><li><strong>Baseline Tests:</strong> EKG, echocardiogram, stress test results</li></ul><br><strong>Health Information Security:</strong><ul><li><strong>Digital Copies:</strong> Photos of insurance cards, medication lists</li><li><strong>Secure Storage:</strong> Password-protected files or health apps</li><li><strong>Share Appropriately:</strong> Give copies to family members, caregivers</li><li><strong>Keep Updated:</strong> Review and update quarterly</li></ul>';
-            }
-
-            // MEDICAL APPOINTMENTS MANAGEMENT
-            if (queryLower.includes('appointments') || queryLower.includes('doctor visit') || queryLower.includes('medical appointment') ||
-                queryLower.includes('follow-up') || queryLower.includes('checkup')) {
-                
-                return disclaimer + '<strong>🏥 MEDICAL APPOINTMENTS & FOLLOW-UP CARE</strong><br><br><strong>Routine Appointment Schedule:</strong><ul><li><strong>Primary Care:</strong> Every 6-12 months for chronic conditions</li><li><strong>Cardiologist:</strong> Every 3-6 months for heart disease patients</li><li><strong>Endocrinologist:</strong> Every 3-6 months for diabetes</li><li><strong>Eye Doctor:</strong> Annually for diabetics, every 2 years otherwise</li><li><strong>Dentist:</strong> Every 6 months (important for heart health)</li></ul><br><strong>Preparing for Doctor Visits:</strong><ul><li><strong>Medication List:</strong> Bring current list with dosages</li><li><strong>Symptom Log:</strong> Notes on any new or changing symptoms</li><li><strong>Question List:</strong> Write down questions beforehand</li><li><strong>Health Logs:</strong> Blood pressure, blood sugar, weight trends</li><li><strong>Insurance Card:</strong> Bring current card and ID</li></ul><br><strong>Important Lab Tests & Frequency:</strong><ul><li><strong>Blood Pressure Patients:</strong> Basic metabolic panel every 6-12 months</li><li><strong>Cholesterol:</strong> Lipid panel every 3-6 months until stable</li><li><strong>Diabetes:</strong> HbA1c every 3-6 months, annual kidney function</li><li><strong>Heart Disease:</strong> Various tests based on condition</li></ul><br><strong>After Your Appointment:</strong><ul><li><strong>Get Summary:</strong> Ask for written summary of visit</li><li><strong>Understand Instructions:</strong> Clarify any medication changes</li><li><strong>Schedule Follow-up:</strong> Book next appointment before leaving</li><li><strong>Fill Prescriptions:</strong> Get new medications promptly</li><li><strong>Follow Instructions:</strong> Implement any lifestyle changes discussed</li></ul>';
-            }
-
-            // MEDICATION MANAGEMENT
-            if (queryLower.includes('medication management') || queryLower.includes('manage medications') || 
-                queryLower.includes('pill organization') || queryLower.includes('medication safety') ||
-                (queryLower.includes('medications') && !queryLower.includes('heart') && !queryLower.includes('diabetes'))) {
-                
-                return disclaimer + '<strong>💊 COMPREHENSIVE MEDICATION MANAGEMENT</strong><br><br><strong>Medication Organization System:</strong><ul><li><strong>Pill Organizers:</strong> Weekly organizers with AM/PM compartments</li><li><strong>Medication List:</strong> Keep updated list in wallet and on phone</li><li><strong>Set Reminders:</strong> Phone alarms for each medication time</li><li><strong>Refill Calendar:</strong> Mark refill dates on calendar</li><li><strong>Emergency Supply:</strong> Keep 7-day supply for emergencies</li></ul><br><strong>Safe Medication Practices:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Suddenly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels Carefully:</strong> Check expiration dates and instructions</li><li><strong>Store Properly:</strong> Cool, dry place unless refrigeration needed</li><li><strong>Keep Original Bottles:</strong> For emergency identification</li></ul><br><strong>Critical Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increases bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Can cause dangerous high potassium</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Diabetes Meds + Alcohol:</strong> Risk of dangerous low blood sugar</li><li><strong>Multiple BP Meds:</strong> Can cause dangerously low blood pressure</li></ul><br><strong>When to Contact Your Doctor:</strong><ul><li><strong>Side Effects:</strong> New symptoms after starting medication</li><li><strong>Missed Doses:</strong> Unsure what to do if you miss doses</li><li><strong>Cost Issues:</strong> Can\'t afford medications</li><li><strong>Effectiveness:</strong> Medication doesn\'t seem to be working</li><li><strong>New Medications:</strong> Before starting any new drugs or supplements</li></ul><br><strong>Medication Cost-Saving Tips:</strong><ul><li><strong>Generic Options:</strong> Ask about generic versions</li><li><strong>Manufacturer Coupons:</strong> Check drug company websites</li><li><strong>Pharmacy Programs:</strong> Walmart $4 list, Costco, etc.</li><li><strong>Insurance Formulary:</strong> Choose preferred drugs when possible</li><li><strong>90-Day Supplies:</strong> Often cheaper than monthly refills</li></ul>';
-            }
-
-            // DEFAULT RESPONSE WITH SUGGESTIONS
-            return disclaimer + 'I specialize in <strong>Hypertension, Cholesterol, Heart Disease, Diabetes, and Health Management</strong>.<br><br><strong>Popular Questions I Can Help With:</strong><ul><li>"My blood pressure is 150/95, what should I do?"</li><li>"How can I lower my cholesterol naturally?"</li><li>"What are the warning signs of a heart attack?"</li><li>"How do I control my blood sugar better?"</li><li>"How should I organize my medications?"</li><li>"What should I track in my health calendar?"</li><li>"How do I prepare for doctor appointments?"</li><li>"What health information should I keep?"</li><li>"When should I call 911 for chest pain?"</li><li>"Can I exercise with heart disease?"</li></ul><br><strong>Try asking about:</strong> Symptoms, medications, diet, exercise, emergency signs, natural treatments, health tracking, or appointment management.<br><br>Click the topic cards above for detailed information!';
-        }
-
-        // Send message with chat clearing (for card clicks)
-        function sendMessageWithClear(preset) {
-            clearChat(); // Clear previous conversation
-            sendMessage(preset);
-        }
-
-        // Regular send message function (for typed messages)
-        function sendMessage(preset) {
-            const text = preset || userInput.value.trim();
-            if (!text) return;
-
-            // Add user message instantly
-            addBubble(text, 'user', false);
-            userInput.value = '';
-
-            // Add bot response with typewriter effect after delay
-            setTimeout(() => {
-                const response = getMedicalResponse(text);
-                addBubble(response, 'bot', true); // Enable typewriter effect
-            }, 800);
-        }
-
-        // Health Management System - In-Memory Storage
-        let healthData = {
-            readings: [],
-            goals: [],
-            personalInfo: {},
-            conditions: [],
-            allergies: [],
-            appointments: [],
-            medications: []
-        };
-
-        // Modal Management Functions
-        function showHealthCalendar() {
-            document.getElementById('calendarModal').style.display = 'block';
-            loadHealthReadings();
-            loadHealthGoals();
-            document.getElementById('readingTime').value = new Date().toISOString().slice(0, 16);
-        }
-
-        function showMyHealthInfo() {
-            document.getElementById('healthInfoModal').style.display = 'block';
-            loadPersonalInfo();
-            loadMedicalConditions();
-            loadAllergies();
-        }
-
-        function showAppointments() {
-            document.getElementById('appointmentsModal').style.display = 'block';
-            loadAppointments();
-        }
-
-        function showMedications() {
-            document.getElementById('medicationsModal').style.display = 'block';
-            loadMedications();
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
-        // Health Calendar Functions
-        function addHealthReading() {
-            const value = document.getElementById('readingValue').value;
-            const type = document.getElementById('readingType').value;
-            const time = document.getElementById('readingTime').value;
-            
-            if (value && time) {
-                const reading = {
-                    id: Date.now(),
-                    value: value,
-                    type: type,
-                    time: time,
-                    date: new Date(time).toLocaleDateString()
-                };
-                
-                healthData.readings.push(reading);
-                loadHealthReadings();
-                
-                // Clear form
-                document.getElementById('readingValue').value = '';
-                document.getElementById('readingTime').value = new Date().toISOString().slice(0, 16);
-            }
-        }
-
-        function loadHealthReadings() {
-            const container = document.getElementById('healthReadings');
-            container.innerHTML = '';
-            
-            healthData.readings.slice(-10).reverse().forEach(reading => {
-                const div = document.createElement('div');
-                div.className = 'reading-entry';
-                div.innerHTML = `
-                    <strong>${reading.type}</strong>
-                    <span>${reading.value}</span>
-                    <span>${reading.date}</span>
-                    <button class="delete-btn" onclick="deleteReading(${reading.id})">Delete</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function deleteReading(id) {
-            healthData.readings = healthData.readings.filter(r => r.id !== id);
-            loadHealthReadings();
-        }
-
-        function addHealthGoal() {
-            const goalText = document.getElementById('newGoal').value;
-            if (goalText) {
-                const goal = {
-                    id: Date.now(),
-                    text: goalText,
-                    completed: false,
-                    date: new Date().toLocaleDateString()
-                };
-                
-                healthData.goals.push(goal);
-                loadHealthGoals();
-                document.getElementById('newGoal').value = '';
-            }
-        }
-
-        function loadHealthGoals() {
-            const container = document.getElementById('healthGoals');
-            container.innerHTML = '';
-            
-            healthData.goals.forEach(goal => {
-                const div = document.createElement('div');
-                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-                div.innerHTML = `
-                    <span style="${goal.completed ? 'text-decoration: line-through; color: #666;' : ''}">${goal.text}</span>
-                    <div>
-                        <button class="btn" style="padding: 5px 10px; margin-right: 5px;" onclick="toggleGoal(${goal.id})">${goal.completed ? 'Undo' : 'Complete'}</button>
-                        <button class="delete-btn" onclick="deleteGoal(${goal.id})">Delete</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function toggleGoal(id) {
-            const goal = healthData.goals.find(g => g.id === id);
-            if (goal) {
-                goal.completed = !goal.completed;
-                loadHealthGoals();
-            }
-        }
-
-        function deleteGoal(id) {
-            healthData.goals = healthData.goals.filter(g => g.id !== id);
-            loadHealthGoals();
-        }
-
-        // Personal Health Info Functions
-        function saveHealthInfo() {
-            healthData.personalInfo = {
-                fullName: document.getElementById('fullName').value,
-                dateOfBirth: document.getElementById('dateOfBirth').value,
-                emergencyContact: document.getElementById('emergencyContact').value,
-                bpGoal: document.getElementById('bpGoal').value,
-                cholesterolGoal: document.getElementById('cholesterolGoal').value,
-                bsGoal: document.getElementById('bsGoal').value,
-                weightGoal: document.getElementById('weightGoal').value
-            };
-            alert('Health information saved successfully!');
-        }
-
-        function loadPersonalInfo() {
-            const info = healthData.personalInfo;
-            document.getElementById('fullName').value = info.fullName || '';
-            document.getElementById('dateOfBirth').value = info.dateOfBirth || '';
-            document.getElementById('emergencyContact').value = info.emergencyContact || '';
-            document.getElementById('bpGoal').value = info.bpGoal || '';
-            document.getElementById('cholesterolGoal').value = info.cholesterolGoal || '';
-            document.getElementById('bsGoal').value = info.bsGoal || '';
-            document.getElementById('weightGoal').value = info.weightGoal || '';
-        }
-
-        function addMedicalCondition() {
-            const condition = document.getElementById('newCondition').value;
-            if (condition) {
-                healthData.conditions.push({
-                    id: Date.now(),
-                    name: condition,
-                    date: new Date().toLocaleDateString()
-                });
-                loadMedicalConditions();
-                document.getElementById('newCondition').value = '';
-            }
-        }
-
-        function loadMedicalConditions() {
-            const container = document.getElementById('medicalConditions');
-            container.innerHTML = '';
-            
-            healthData.conditions.forEach(condition => {
-                const div = document.createElement('div');
-                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-                div.innerHTML = `
-                    <span><strong>${condition.name}</strong> <small>(Added: ${condition.date})</small></span>
-                    <button class="delete-btn" onclick="deleteCondition(${condition.id})">Delete</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function deleteCondition(id) {
-            healthData.conditions = healthData.conditions.filter(c => c.id !== id);
-            loadMedicalConditions();
-        }
-
-        function addAllergy() {
-            const allergy = document.getElementById('newAllergy').value;
-            if (allergy) {
-                healthData.allergies.push({
-                    id: Date.now(),
-                    name: allergy,
-                    date: new Date().toLocaleDateString()
-                });
-                loadAllergies();
-                document.getElementById('newAllergy').value = '';
-            }
-        }
-
-        function loadAllergies() {
-            const container = document.getElementById('allergiesList');
-            container.innerHTML = '';
-            
-            healthData.allergies.forEach(allergy => {
-                const div = document.createElement('div');
-                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-                div.innerHTML = `
-                    <span><strong>${allergy.name}</strong> <small>(Added: ${allergy.date})</small></span>
-                    <button class="delete-btn" onclick="deleteAllergy(${allergy.id})">Delete</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function deleteAllergy(id) {
-            healthData.allergies = healthData.allergies.filter(a => a.id !== id);
-            loadAllergies();
-        }
-
-        // Appointments Functions
-        function addAppointment() {
-            const doctor = document.getElementById('doctorName').value;
-            const time = document.getElementById('appointmentTime').value;
-            const type = document.getElementById('appointmentType').value;
-            const phone = document.getElementById('doctorPhone').value;
-            const notes = document.getElementById('appointmentNotes').value;
-            
-            if (doctor && time) {
-                const appointment = {
-                    id: Date.now(),
-                    doctor: doctor,
-                    time: time,
-                    type: type,
-                    phone: phone,
-                    notes: notes,
-                    date: new Date(time).toLocaleDateString(),
-                    isPast: new Date(time) < new Date()
-                };
-                
-                healthData.appointments.push(appointment);
-                loadAppointments();
-                
-                // Clear form
-                document.getElementById('doctorName').value = '';
-                document.getElementById('appointmentTime').value = '';
-                document.getElementById('doctorPhone').value = '';
-                document.getElementById('appointmentNotes').value = '';
-            }
-        }
-
-        function loadAppointments() {
-            const upcomingContainer = document.getElementById('upcomingAppointments');
-            const pastContainer = document.getElementById('pastAppointments');
-            
-            upcomingContainer.innerHTML = '';
-            pastContainer.innerHTML = '';
-            
-            const now = new Date();
-            
-            healthData.appointments.forEach(appointment => {
-                const appointmentDate = new Date(appointment.time);
-                const isUpcoming = appointmentDate >= now;
-                
-                const div = document.createElement('div');
-                div.className = 'health-card';
-                div.style.cssText = 'background: white; margin-bottom: 10px;';
-                div.innerHTML = `
-                    <h4 style="margin: 0 0 10px 0; color: ${isUpcoming ? '#DAA520' : '#666'};">${appointment.doctor}</h4>
-                    <p><strong>Date:</strong> ${new Date(appointment.time).toLocaleString()}</p>
-                    <p><strong>Type:</strong> ${appointment.type}</p>
-                    ${appointment.phone ? `<p><strong>Phone:</strong> ${appointment.phone}</p>` : ''}
-                    ${appointment.notes ? `<p><strong>Notes:</strong> ${appointment.notes}</p>` : ''}
-                    <button class="delete-btn" onclick="deleteAppointment(${appointment.id})">Delete</button>
-                `;
-                
-                if (isUpcoming) {
-                    upcomingContainer.appendChild(div);
-                } else {
-                    pastContainer.appendChild(div);
-                }
-            });
-            
-            if (upcomingContainer.children.length === 0) {
-                upcomingContainer.innerHTML = '<p>No upcoming appointments scheduled.</p>';
-            }
-            
-            if (pastContainer.children.length === 0) {
-                pastContainer.innerHTML = '<p>No past appointments recorded.</p>';
-            }
-        }
-
-        function deleteAppointment(id) {
-            healthData.appointments = healthData.appointments.filter(a => a.id !== id);
-            loadAppointments();
-        }
-
-        // Medications Functions
-        function addMedication() {
-            const name = document.getElementById('medicationName').value;
-            const dosage = document.getElementById('medicationDosage').value;
-            const frequency = document.getElementById('medicationFrequency').value;
-            const time = document.getElementById('medicationTime').value;
-            const doctor = document.getElementById('prescribingDoctor').value;
-            const pharmacy = document.getElementById('pharmacy').value;
-            const notes = document.getElementById('medicationNotes').value;
-            
-            if (name && dosage) {
-                const medication = {
-                    id: Date.now(),
-                    name: name,
-                    dosage: dosage,
-                    frequency: frequency,
-                    time: time,
-                    doctor: doctor,
-                    pharmacy: pharmacy,
-                    notes: notes,
-                    dateAdded: new Date().toLocaleDateString()
-                };
-                
-                healthData.medications.push(medication);
-                loadMedications();
-                
-                // Clear form
-                document.getElementById('medicationName').value = '';
-                document.getElementById('medicationDosage').value = '';
-                document.getElementById('medicationTime').value = '';
-                document.getElementById('prescribingDoctor').value = '';
-                document.getElementById('pharmacy').value = '';
-                document.getElementById('medicationNotes').value = '';
-            }
-        }
-
-        function loadMedications() {
-            const container = document.getElementById('currentMedications');
-            container.innerHTML = '';
-            
-            healthData.medications.forEach(medication => {
-                const div = document.createElement('div');
-                div.className = 'health-card';
-                div.style.cssText = 'background: white; margin-bottom: 10px;';
-                div.innerHTML = `
-                    <h4 style="margin: 0 0 10px 0; color: #DAA520;">${medication.name} ${medication.dosage}</h4>
-                    <p><strong>Frequency:</strong> ${medication.frequency}</p>
-                    ${medication.time ? `<p><strong>Time to Take:</strong> ${medication.time}</p>` : ''}
-                    ${medication.doctor ? `<p><strong>Prescribed by:</strong> ${medication.doctor}</p>` : ''}
-                    ${medication.pharmacy ? `<p><strong>Pharmacy:</strong> ${medication.pharmacy}</p>` : ''}
-                    ${medication.notes ? `<p><strong>Notes:</strong> ${medication.notes}</p>` : ''}
-                    <p><small>Added: ${medication.dateAdded}</small></p>
-                    <button class="delete-btn" onclick="deleteMedication(${medication.id})">Delete</button>
-                `;
-                container.appendChild(div);
-            });
-            
-            if (healthData.medications.length === 0) {
-                container.innerHTML = '<p>No medications added yet.</p>';
-            }
-        }
-
-        function deleteMedication(id) {
-            healthData.medications = healthData.medications.filter(m => m.id !== id);
-            loadMedications();
-        }
-
-        // Enter key support
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+        const hasEvents = allEvents.some(event => {
+          const eventDate = new Date(event.dateTime);
+          return eventDate.toDateString() === currentDay.toDateString();
         });
 
-        console.log('InfoHealth AI app initialized with enhanced natural language processing');
+        if (hasEvents) {
+          dayElement.classList.add('has-appointment');
+        }
 
-        // Make functions available globally
-        window.sendMessageWithClear = sendMessageWithClear;
-        window.sendMessage = sendMessage;
-        window.goHome = goHome;
-        window.showHealthCalendar = showHealthCalendar;
-        window.showMyHealthInfo = showMyHealthInfo;
-        window.showAppointments = showAppointments;
-        window.showMedications = showMedications;
-        window.closeModal = closeModal;
-        window.addHealthReading = addHealthReading;
-        window.loadHealthReadings = loadHealthReadings;
-        window.deleteReading = deleteReading;
-        window.addHealthGoal = addHealthGoal;
-        window.loadHealthGoals = loadHealthGoals;
-        window.toggleGoal = toggleGoal;
-        window.deleteGoal = deleteGoal;
-        window.saveHealthInfo = saveHealthInfo;
-        window.loadPersonalInfo = loadPersonalInfo;
-        window.addMedicalCondition = addMedicalCondition;
-        window.loadMedicalConditions = loadMedicalConditions;
-        window.deleteCondition = deleteCondition;
-        window.addAllergy = addAllergy;
-        window.loadAllergies = loadAllergies;
-        window.deleteAllergy = deleteAllergy;
-        window.addAppointment = addAppointment;
-        window.loadAppointments = loadAppointments;
-        window.deleteAppointment = deleteAppointment;
-        window.addMedication = addMedication;
-        window.loadMedications = loadMedications;
-        window.deleteMedication = deleteMedication;
+        dayElement.onclick = () => showDayEvents(currentDay);
+        gridElement.appendChild(dayElement);
+      }
+
+      const totalCells = gridElement.children.length;
+      const remainingCells = 42 - totalCells;
+      for (let day = 1; day <= remainingCells; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day other-month';
+        dayElement.textContent = day;
+        gridElement.appendChild(dayElement);
+      }
+    }
+
+    function showDayEvents(date) {
+      const appointments = getFromLocal('appointments');
+      const events = getFromLocal('calendar');
+      const allEvents = [...appointments, ...events];
+
+      const dayEvents = allEvents.filter(event => {
+        const eventDate = new Date(event.dateTime);
+        return eventDate.toDateString() === date.toDateString();
+      });
+
+      const eventsContainer = document.getElementById('selectedDateEvents');
+      if (!eventsContainer) return;
+
+      if (dayEvents.length === 0) {
+        eventsContainer.innerHTML = `<p style="text-align: center; color: #666; font-size: 0.8rem;">No events on ${date.toLocaleDateString()}</p>`;
+        return;
+      }
+
+      eventsContainer.innerHTML = `
+        <h4 style="color: #333; margin-bottom: 0.5rem;">Events on ${date.toLocaleDateString()}</h4>
+        ${dayEvents.map(event => {
+          const eventTime = new Date(event.dateTime);
+          const isAppointment = event.doctor;
+
+          return `
+            <div class="info-item" style="cursor: pointer;" onclick="${isAppointment ? `viewAppointment(${event.id})` : ''}">
+              <div>
+                <strong>${isAppointment ? '📋 ' + event.doctor + ' - ' + event.type : '📅 ' + event.title}</strong><br>
+                <small style="color: #666;">🕐 ${eventTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                ${event.location ? `<br><small style="color: #666;">📍 ${event.location}</small>` : ''}
+              </div>
+              ${isAppointment ? '<span style="color: #DAA520;">👁️ View</span>' : ''}
+            </div>
+          `;
+        }).join('')}
+      `;
+    }
+
+    function addCalendarEvent() {
+      const title = document.getElementById('eventTitle').value;
+      const dateTime = document.getElementById('eventDateTime').value;
+      const description = document.getElementById('eventDescription').value;
+
+      if (title && dateTime) {
+        const events = getFromLocal('calendar');
+        const newEvent = {
+          id: Date.now(),
+          title,
+          dateTime,
+          description,
+          created: new Date().toISOString()
+        };
+
+        events.push(newEvent);
+        saveToLocal('calendar', events);
+
+        document.getElementById('eventTitle').value = '';
+        document.getElementById('eventDateTime').value = '';
+        document.getElementById('eventDescription').value = '';
+
+        showSuccessMessage('✅ Event added to calendar!');
+        renderCalendar();
+      } else {
+        showErrorMessage('Please fill in title and date/time');
+      }
+    }
+
+    // My Info Functions
+    function showMyInfo() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('My Info', 'user');
+      const myInfoHTML = `
+        <div class="form-container">
+          <h3>My Medical Profile</h3>
+          <div id="myInfoDisplay"></div>
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+            <h4 style="color: #28a745; margin-bottom: 0.8rem;">✏️ Update Medical Profile</h4>
+            <h5 style="color: #28a745; margin-top: 1rem;">Personal Information</h5>
+            <div class="form-group">
+              <label>Full Name:</label>
+              <input type="text" id="infoName" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Date of Birth:</label>
+              <input type="date" id="infoDOB">
+            </div>
+            <div class="form-group">
+              <label>Blood Type:</label>
+              <select id="infoBloodType">
+                <option value="">Select blood type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+            <h5 style="color: #28a745; margin-top: 1rem;">Medical Information</h5>
+            <div class="form-group">
+              <label>Current Medications:</label>
+              <textarea id="infoMedications" placeholder="List your current medications and dosages"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Medical Conditions:</label>
+              <textarea id="infoConditions" placeholder="List any medical conditions, allergies"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Primary Care Doctor:</label>
+              <input type="text" id="infoPrimaryDoctor" placeholder="Dr. Smith - (555) 123-4567">
+            </div>
+            <button class="btn" onclick="saveMyInfo()">💾 Save My Info</button>
+          </div>
+          <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(myInfoHTML, 'bot');
+      setTimeout(() => {
+        loadMyInfo();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function saveMyInfo() {
+      const myInfo = {
+        name: document.getElementById('infoName').value,
+        dob: document.getElementById('infoDOB').value,
+        bloodType: document.getElementById('infoBloodType').value,
+        medications: document.getElementById('infoMedications').value,
+        conditions: document.getElementById('infoConditions').value,
+        primaryDoctor: document.getElementById('infoPrimaryDoctor').value,
+        updated: new Date().toISOString()
+      };
+
+      saveToLocal('myInfo', myInfo);
+      showSuccessMessage('✅ Your medical profile has been saved!');
+      loadMyInfo();
+    }
+
+    function loadMyInfo() {
+      const myInfo = getFromLocal('myInfo');
+      const displayElement = document.getElementById('myInfoDisplay');
+      
+      if (displayElement) {
+        if (Object.keys(myInfo).length === 0) {
+          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">Complete your medical profile below.</p>';
+        } else {
+          displayElement.innerHTML = `
+            <div class="info-section">
+              <h4>👤 Personal Information</h4>
+              ${myInfo.name ? `<div class="info-item"><strong>Name:</strong> ${myInfo.name}</div>` : ''}
+              ${myInfo.dob ? `<div class="info-item"><strong>Date of Birth:</strong> ${new Date(myInfo.dob).toLocaleDateString()}</div>` : ''}
+              ${myInfo.bloodType ? `<div class="info-item"><strong>Blood Type:</strong> ${myInfo.bloodType}</div>` : ''}
+            </div>
+            <div class="info-section">
+              <h4>⚕️ Medical Information</h4>
+              ${myInfo.medications ? `<div class="info-item"><strong>Medications:</strong><br>${myInfo.medications}</div>` : ''}
+              ${myInfo.conditions ? `<div class="info-item"><strong>Conditions:</strong><br>${myInfo.conditions}</div>` : ''}
+              ${myInfo.primaryDoctor ? `<div class="info-item"><strong>Primary Doctor:</strong> ${myInfo.primaryDoctor}</div>` : ''}
+            </div>
+          `;
+        }
+        
+        if (myInfo.name) {
+          document.getElementById('infoName').value = myInfo.name || '';
+          document.getElementById('infoDOB').value = myInfo.dob || '';
+          document.getElementById('infoBloodType').value = myInfo.bloodType || '';
+          document.getElementById('infoMedications').value = myInfo.medications || '';
+          document.getElementById('infoConditions').value = myInfo.conditions || '';
+          document.getElementById('infoPrimaryDoctor').value = myInfo.primaryDoctor || '';
+        }
+      }
+    }
+
+    // Appointments Functions
+    function showAppointments() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+
+      addBubble('Appointments', 'user');
+      const appointmentsHTML = `
+        <div class="form-container">
+          <h3>My Appointments</h3>
+          <div id="appointmentsList"></div>
+          <div class="form-group">
+            <label>Doctor/Provider:</label>
+            <input type="text" id="appointmentDoctor" placeholder="Dr. John Smith">
+          </div>
+          <div class="form-group">
+            <label>Appointment Date & Time:</label>
+            <input type="datetime-local" id="appointmentDateTime">
+          </div>
+          <div class="form-group">
+            <label>Type of Visit:</label>
+            <select id="appointmentType">
+              <option value="checkup">Regular Checkup</option>
+              <option value="followup">Follow-up</option>
+              <option value="consultation">Consultation</option>
+              <option value="specialist">Specialist</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Location/Address:</label>
+            <input type="text" id="appointmentLocation" placeholder="123 Medical Center Dr">
+          </div>
+          <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(appointmentsHTML, 'bot');
+      setTimeout(() => {
+        loadAppointments();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function addAppointment() {
+      const doctor = document.getElementById('appointmentDoctor').value;
+      const dateTime = document.getElementById('appointmentDateTime').value;
+      const type = document.getElementById('appointmentType').value;
+      const location = document.getElementById('appointmentLocation').value;
+
+      if (doctor && dateTime) {
+        const appointments = getFromLocal('appointments');
+        const newAppointment = {
+          id: Date.now(),
+          doctor,
+          dateTime,
+          type,
+          location,
+          status: 'scheduled',
+          created: new Date().toISOString()
+        };
+
+        appointments.push(newAppointment);
+        saveToLocal('appointments', appointments);
+
+        document.getElementById('appointmentDoctor').value = '';
+        document.getElementById('appointmentDateTime').value = '';
+        document.getElementById('appointmentLocation').value = '';
+
+        showSuccessMessage('✅ Appointment scheduled!');
+        loadAppointments();
+      }
+    }
+
+    function loadAppointments() {
+      const appointments = getFromLocal('appointments');
+      const listElement = document.getElementById('appointmentsList');
+      if (listElement) {
+        listElement.innerHTML = appointments.map(appointment => {
+          const appointmentDate = new Date(appointment.dateTime);
+          return `
+            <div class="appointment-item">
+              <div class="appointment-doctor">${appointment.doctor}</div>
+              <div class="appointment-type">${appointment.type}</div>
+              <div class="appointment-datetime">
+                📅 ${appointmentDate.toLocaleDateString()} at ${appointmentDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </div>
+              ${appointment.location ? `<div class="appointment-location">📍 ${appointment.location}</div>` : ''}
+            </div>
+          `;
+        }).join('') || '<p style="text-align: center; color: #666; padding: 1rem;">No appointments scheduled.</p>';
+      }
+    }
+
+    // Medications Functions
+    function showMedications() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Medications', 'user');
+      const medicationsHTML = `
+        <div class="form-container">
+          <h3>My Medications</h3>
+          <div id="medicationsList"></div>
+          <div class="form-group">
+            <label>Medication Name:</label>
+            <input type="text" id="medName" placeholder="Lisinopril, Metformin, etc.">
+          </div>
+          <div class="form-group">
+            <label>Dosage:</label>
+            <input type="text" id="medDosage" placeholder="10mg, 500mg, etc.">
+          </div>
+          <div class="form-group">
+            <label>Times Per Day:</label>
+            <select id="medTimesPerDay">
+              <option value="1">1 time per day</option>
+              <option value="2">2 times per day</option>
+              <option value="3">3 times per day</option>
+              <option value="As needed">As needed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Prescribed By:</label>
+            <input type="text" id="medPrescribedBy" placeholder="Dr. Smith">
+          </div>
+          <button class="btn" onclick="addMedication()">💊 Save Medication</button>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(medicationsHTML, 'bot');
+      setTimeout(() => {
+        loadMedications();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function addMedication() {
+      const name = document.getElementById('medName').value;
+      const dosage = document.getElementById('medDosage').value;
+      const timesPerDay = document.getElementById('medTimesPerDay').value;
+      const prescribedBy = document.getElementById('medPrescribedBy').value;
+
+      if (name && dosage) {
+        const medications = getFromLocal('medications');
+        const newMedication = {
+          id: Date.now(),
+          name,
+          dosage,
+          timesPerDay,
+          prescribedBy,
+          active: true,
+          created: new Date().toISOString()
+        };
+
+        medications.push(newMedication);
+        saveToLocal('medications', medications);
+
+        document.getElementById('medName').value = '';
+        document.getElementById('medDosage').value = '';
+        document.getElementById('medPrescribedBy').value = '';
+
+        showSuccessMessage('✅ Medication added!');
+        loadMedications();
+      }
+    }
+
+    function loadMedications() {
+      const medications = getFromLocal('medications');
+      const listElement = document.getElementById('medicationsList');
+      
+      if (listElement) {
+        const activeMeds = medications.filter(med => med.active);
+        
+        if (activeMeds.length === 0) {
+          listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications tracked yet.</p>';
+          return;
+        }
+
+        listElement.innerHTML = `
+          <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">💊 Active Medications</h4>
+          ${activeMeds.map(med => {
+            const timesDisplay = med.timesPerDay + ' times daily';
+            
+            return `
+              <div class="medication-item info-item">
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                    <strong style="color: #17a2b8;">${med.name} ${med.dosage}</strong>
+                    <span class="medication-time">${timesDisplay}</span>
+                  </div>
+                  <div style="font-size: 0.75rem; color: #666;">
+                    ${med.prescribedBy ? `👨‍⚕️ ${med.prescribedBy}` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        `;
+      }
+    }
+
+    // Enhanced Health Tools Functions
+    function showDrugChecker() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Drug Checker', 'user');
+      const drugCheckerHTML = `
+        <div class="form-container">
+          <h3>💊 Drug Interaction Checker</h3>
+          <div id="currentMedicationsCheck"></div>
+          <div class="form-group">
+            <label>Add Medication to Check:</label>
+            <input type="text" id="newDrugName" placeholder="Enter medication name">
+          </div>
+          <button class="btn" onclick="checkDrugInteractions()">🔍 Check Interactions</button>
+          <div id="interactionResults" style="margin-top: 1rem;"></div>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(drugCheckerHTML, 'bot');
+      setTimeout(() => {
+        loadCurrentMedicationsForCheck();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function showHealthTracker() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Health Tracker', 'user');
+      const trackerHTML = `
+        <div class="form-container">
+          <h3>📊 Health Tracker</h3>
+          <div id="healthStats"></div>
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+            <h4 style="color: #28a745; margin-bottom: 0.8rem;">📈 Add New Reading</h4>
+            <div class="form-group">
+              <label>Measurement Type:</label>
+              <select id="measurementType">
+                <option value="blood_pressure">Blood Pressure</option>
+                <option value="blood_sugar">Blood Sugar</option>
+                <option value="weight">Weight</option>
+                <option value="heart_rate">Heart Rate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Value:</label>
+              <input type="text" id="measurementValue" placeholder="e.g., 120/80, 95, 150 lbs, 72 bpm">
+            </div>
+            <div class="form-group">
+              <label>Date & Time:</label>
+              <input type="datetime-local" id="measurementDateTime">
+            </div>
+            <button class="btn" onclick="addHealthMeasurement()">📊 Add Reading</button>
+          </div>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(trackerHTML, 'bot');
+      setTimeout(() => {
+        loadHealthStats();
+        setCurrentDateTime('measurementDateTime');
+        isProcessing = false;
+      }, 500);
+    }
+
+    function showReminders() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Reminders', 'user');
+      const remindersHTML = `
+        <div class="form-container">
+          <h3>⏰ Medication Reminders</h3>
+          <div id="activeReminders"></div>
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+            <h4 style="color: #28a745; margin-bottom: 0.8rem;">➕ Set New Reminder</h4>
+            <div class="form-group">
+              <label>Medication:</label>
+              <input type="text" id="reminderMedication" placeholder="Medication name">
+            </div>
+            <div class="form-group">
+              <label>Time:</label>
+              <input type="time" id="reminderTime">
+            </div>
+            <div class="form-group">
+              <label>Frequency:</label>
+              <select id="reminderFrequency">
+                <option value="daily">Daily</option>
+                <option value="twice_daily">Twice Daily</option>
+                <option value="three_times">Three Times Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+            <button class="btn" onclick="addReminder()">⏰ Set Reminder</button>
+          </div>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(remindersHTML, 'bot');
+      setTimeout(() => {
+        loadActiveReminders();
+        isProcessing = false;
+      }, 500);
+    }
+
+    function showEmergencyInfo() {
+      if (isProcessing) return;
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble('Emergency', 'user');
+      const emergencyHTML = `
+        <div class="form-container">
+          <h3>🚨 Emergency Information</h3>
+          <div id="emergencyDisplay"></div>
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+            <h4 style="color: #dc3545; margin-bottom: 0.8rem;">🆘 Update Emergency Info</h4>
+            <div class="form-group">
+              <label>Emergency Contact Name:</label>
+              <input type="text" id="emergencyContactName" placeholder="John Smith">
+            </div>
+            <div class="form-group">
+              <label>Emergency Contact Phone:</label>
+              <input type="tel" id="emergencyContactPhone" placeholder="(555) 123-4567">
+            </div>
+            <div class="form-group">
+              <label>Medical Allergies:</label>
+              <textarea id="emergencyAllergies" placeholder="Penicillin, shellfish, etc."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Critical Medical Conditions:</label>
+              <textarea id="emergencyConditions" placeholder="Diabetes, heart condition, etc."></textarea>
+            </div>
+            <button class="btn" onclick="saveEmergencyInfo()">🆘 Save Emergency Info</button>
+          </div>
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+          </div>
+        </div>`;
+
+      addBubble(emergencyHTML, 'bot');
+      setTimeout(() => {
+        loadEmergencyInfo();
+        isProcessing = false;
+      }, 500);
+    }
+
+    // Utility functions
+    function openVideo(videoUrl) {
+      // Open any video URL in a new tab/window
+      if (videoUrl) {
+        window.open(videoUrl, '_blank');
+      }
+    }
+
+    function showSuccessMessage(message) {
+      const tempMessage = document.createElement('div');
+      tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+      tempMessage.textContent = message;
+      document.body.appendChild(tempMessage);
+      
+      setTimeout(() => {
+        document.body.removeChild(tempMessage);
+      }, 2000);
+    }
+
+    function showErrorMessage(message) {
+      const tempMessage = document.createElement('div');
+      tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #dc3545; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+      tempMessage.textContent = message;
+      document.body.appendChild(tempMessage);
+      
+      setTimeout(() => {
+        document.body.removeChild(tempMessage);
+      }, 2000);
+    }
+
+    // Enhanced Logic Support Functions
+    function loadCurrentMedicationsForCheck() {
+      const medications = getFromLocal('medications');
+      const activeMeds = medications.filter(med => med.active);
+      const displayElement = document.getElementById('currentMedicationsCheck');
+      
+      if (displayElement) {
+        if (activeMeds.length === 0) {
+          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications found. Add medications in "My Info" or "Medications" section first.</p>';
+        } else {
+          displayElement.innerHTML = `
+            <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">Current Medications:</h4>
+            ${activeMeds.map(med => `
+              <div class="info-item">
+                <strong>${med.name} ${med.dosage}</strong> - ${med.timesPerDay} times daily
+              </div>
+            `).join('')}
+          `;
+        }
+      }
+    }
+
+    function checkDrugInteractions() {
+      const newDrug = document.getElementById('newDrugName').value.toLowerCase();
+      const medications = getFromLocal('medications');
+      const activeMeds = medications.filter(med => med.active);
+      const resultsElement = document.getElementById('interactionResults');
+      
+      if (!newDrug) {
+        showErrorMessage('Please enter a medication name');
+        return;
+      }
+
+      // Basic drug interaction database (simplified)
+      const interactions = {
+        'warfarin': ['aspirin', 'ibuprofen', 'simvastatin', 'metformin'],
+        'aspirin': ['warfarin', 'lisinopril', 'metformin'],
+        'ibuprofen': ['warfarin', 'lisinopril', 'losartan', 'metoprolol'],
+        'lisinopril': ['potassium', 'ibuprofen', 'aspirin'],
+        'metformin': ['alcohol', 'warfarin', 'contrast dye'],
+        'simvastatin': ['grapefruit', 'warfarin', 'gemfibrozil'],
+        'losartan': ['potassium', 'ibuprofen', 'naproxen'],
+        'albuterol': ['propranolol', 'metoprolol', 'atenolol']
+      };
+
+      let foundInteractions = [];
+      
+      activeMeds.forEach(med => {
+        const medName = med.name.toLowerCase();
+        if (interactions[newDrug] && interactions[newDrug].includes(medName)) {
+          foundInteractions.push(`⚠️ ${newDrug.toUpperCase()} may interact with ${med.name}`);
+        }
+        if (interactions[medName] && interactions[medName].includes(newDrug)) {
+          foundInteractions.push(`⚠️ ${med.name} may interact with ${newDrug.toUpperCase()}`);
+        }
+      });
+
+      if (resultsElement) {
+        if (foundInteractions.length === 0) {
+          resultsElement.innerHTML = `
+            <div class="info-section">
+              <h4>✅ No Known Interactions Found</h4>
+              <p>No major interactions detected between ${newDrug.toUpperCase()} and your current medications.</p>
+              <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                *Always consult your healthcare provider before starting new medications.
+              </p>
+            </div>
+          `;
+        } else {
+          resultsElement.innerHTML = `
+            <div class="info-section" style="border-left-color: #dc3545;">
+              <h4 style="color: #dc3545;">⚠️ Potential Interactions Found</h4>
+              ${foundInteractions.map(interaction => `<div class="info-item" style="border-left-color: #dc3545;">${interaction}</div>`).join('')}
+              <p style="font-size: 0.8rem; color: #dc3545; margin-top: 0.5rem; font-weight: 600;">
+                **IMPORTANT: Contact your healthcare provider immediately before taking ${newDrug.toUpperCase()}**
+              </p>
+            </div>
+          `;
+        }
+      }
+
+      document.getElementById('newDrugName').value = '';
+    }
+
+    function loadHealthStats() {
+      const measurements = getFromLocal('healthMeasurements');
+      const displayElement = document.getElementById('healthStats');
+      
+      if (displayElement) {
+        if (measurements.length === 0) {
+          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No health measurements recorded yet.</p>';
+          return;
+        }
+
+        // Group by type and show latest readings
+        const byType = {};
+        measurements.forEach(measurement => {
+          if (!byType[measurement.type]) {
+            byType[measurement.type] = [];
+          }
+          byType[measurement.type].push(measurement);
+        });
+
+        // Sort each type by date and get latest
+        Object.keys(byType).forEach(type => {
+          byType[type].sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+        });
+
+        displayElement.innerHTML = `
+          <h4 style="color: #28a745; margin-bottom: 0.5rem;">📈 Latest Readings</h4>
+          ${Object.keys(byType).map(type => {
+            const latest = byType[type][0];
+            const typeNames = {
+              'blood_pressure': '🩺 Blood Pressure',
+              'blood_sugar': '🩸 Blood Sugar',
+              'weight': '⚖️ Weight',
+              'heart_rate': '💓 Heart Rate'
+            };
+            return `
+              <div class="info-item">
+                <div>
+                  <strong>${typeNames[type] || type}</strong><br>
+                  <span style="font-size: 1.1rem; color: #28a745; font-weight: 600;">${latest.value}</span><br>
+                  <small style="color: #666;">${new Date(latest.dateTime).toLocaleDateString()} at ${new Date(latest.dateTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                </div>
+                <span style="color: #666; font-size: 0.8rem;">${byType[type].length} readings</span>
+              </div>
+            `;
+          }).join('')}
+        `;
+      }
+    }
+
+    function addHealthMeasurement() {
+      const type = document.getElementById('measurementType').value;
+      const value = document.getElementById('measurementValue').value;
+      const dateTime = document.getElementById('measurementDateTime').value;
+
+      if (type && value && dateTime) {
+        const measurements = getFromLocal('healthMeasurements');
+        const newMeasurement = {
+          id: Date.now(),
+          type,
+          value,
+          dateTime,
+          created: new Date().toISOString()
+        };
+
+        measurements.push(newMeasurement);
+        saveToLocal('healthMeasurements', measurements);
+
+        document.getElementById('measurementValue').value = '';
+        setCurrentDateTime('measurementDateTime');
+
+        showSuccessMessage('✅ Health measurement recorded!');
+        loadHealthStats();
+      } else {
+        showErrorMessage('Please fill in all fields');
+      }
+    }
+
+    function loadActiveReminders() {
+      const reminders = getFromLocal('reminders');
+      const listElement = document.getElementById('activeReminders');
+      
+      if (listElement) {
+        if (reminders.length === 0) {
+          listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medication reminders set.</p>';
+          return;
+        }
+
+        listElement.innerHTML = `
+          <h4 style="color: #28a745; margin-bottom: 0.5rem;">⏰ Active Reminders</h4>
+          ${reminders.map(reminder => {
+            const frequencyText = {
+              'daily': 'Daily',
+              'twice_daily': 'Twice Daily',
+              'three_times': '3 Times Daily',
+              'weekly': 'Weekly'
+            };
+            
+            return `
+              <div class="info-item">
+                <div>
+                  <strong>${reminder.medication}</strong><br>
+                  <span style="color: #28a745;">🕐 ${reminder.time}</span> - ${frequencyText[reminder.frequency]}
+                </div>
+                <button class="btn-secondary" onclick="deleteReminder(${reminder.id})" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">Delete</button>
+              </div>
+            `;
+          }).join('')}
+        `;
+      }
+    }
+
+    function addReminder() {
+      const medication = document.getElementById('reminderMedication').value;
+      const time = document.getElementById('reminderTime').value;
+      const frequency = document.getElementById('reminderFrequency').value;
+
+      if (medication && time) {
+        const reminders = getFromLocal('reminders');
+        const newReminder = {
+          id: Date.now(),
+          medication,
+          time,
+          frequency,
+          active: true,
+          created: new Date().toISOString()
+        };
+
+        reminders.push(newReminder);
+        saveToLocal('reminders', reminders);
+
+        document.getElementById('reminderMedication').value = '';
+        document.getElementById('reminderTime').value = '';
+
+        showSuccessMessage('⏰ Reminder set successfully!');
+        loadActiveReminders();
+      } else {
+        showErrorMessage('Please enter medication name and time');
+      }
+    }
+
+    function deleteReminder(id) {
+      const reminders = getFromLocal('reminders');
+      const updatedReminders = reminders.filter(reminder => reminder.id !== id);
+      saveToLocal('reminders', updatedReminders);
+      showSuccessMessage('Reminder deleted');
+      loadActiveReminders();
+    }
+
+    function loadEmergencyInfo() {
+      const emergencyInfo = getFromLocal('emergencyInfo');
+      const displayElement = document.getElementById('emergencyDisplay');
+      
+      if (displayElement) {
+        if (Object.keys(emergencyInfo).length === 0) {
+          displayElement.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 1rem; font-weight: 600;">⚠️ No emergency information on file. Please complete below.</p>';
+        } else {
+          displayElement.innerHTML = `
+            <div class="info-section" style="border-left-color: #dc3545;">
+              <h4 style="color: #dc3545;">🆘 Emergency Contact</h4>
+              ${emergencyInfo.contactName ? `<div class="info-item"><strong>Contact:</strong> ${emergencyInfo.contactName}</div>` : ''}
+              ${emergencyInfo.contactPhone ? `<div class="info-item"><strong>Phone:</strong> ${emergencyInfo.contactPhone}</div>` : ''}
+              ${emergencyInfo.allergies ? `<div class="info-item"><strong>Allergies:</strong><br>${emergencyInfo.allergies}</div>` : ''}
+              ${emergencyInfo.conditions ? `<div class="info-item"><strong>Critical Conditions:</strong><br>${emergencyInfo.conditions}</div>` : ''}
+            </div>
+          `;
+        }
+        
+        // Pre-fill form if data exists
+        if (emergencyInfo.contactName) {
+          document.getElementById('emergencyContactName').value = emergencyInfo.contactName || '';
+          document.getElementById('emergencyContactPhone').value = emergencyInfo.contactPhone || '';
+          document.getElementById('emergencyAllergies').value = emergencyInfo.allergies || '';
+          document.getElementById('emergencyConditions').value = emergencyInfo.conditions || '';
+        }
+      }
+    }
+
+    function saveEmergencyInfo() {
+      const emergencyInfo = {
+        contactName: document.getElementById('emergencyContactName').value,
+        contactPhone: document.getElementById('emergencyContactPhone').value,
+        allergies: document.getElementById('emergencyAllergies').value,
+        conditions: document.getElementById('emergencyConditions').value,
+        updated: new Date().toISOString()
+      };
+
+      saveToLocal('emergencyInfo', emergencyInfo);
+      showSuccessMessage('🆘 Emergency information saved!');
+      loadEmergencyInfo();
+    }
+
+    function setCurrentDateTime(elementId) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.value = dateTimeString;
+      }
+    }
+
+    // Send message function
+    function sendMessage(preset = null) {
+      if (isProcessing) return;
+
+      const text = preset || userInput.value.trim();
+      if (!text) return;
+
+      isProcessing = true;
+      clearAllChatMessages();
+      
+      addBubble(text, 'user');
+      userInput.value = '';
+
+      setTimeout(() => {
+        const response = getMedicalResponse(text);
+        addBubble(response, 'bot', true);
+        isProcessing = false;
+      }, 500);
+    }
+
+    // Enter key support
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
     });
-</script>
+
+    console.log('InfoHealth AI app initialized with full features and drug interactions');
+  </script>
 </body>
 </html>
