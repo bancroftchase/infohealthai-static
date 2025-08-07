@@ -726,113 +726,119 @@
   </div>
 
   <script>
-    const chatBox = document.getElementById('chatBox');
-    const userInput = document.getElementById('userInput');
-    let isProcessing = false;
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+    });
 
-    // Simple toggle language function
-    function toggleLanguage() {
-      const comingSoonMessage = "**Traducción al Español - Próximamente**\n\nLa función de traducción completa estará disponible pronto. Por ahora, puede continuar usando InfoHealth AI en inglés para obtener información médica precisa.\n\n*Complete Spanish translation feature coming soon. You can continue using InfoHealth AI in English for accurate medical information.*";
-      addBubble(comingSoonMessage, 'bot', true);
-    }
+    function initializeApp() {
+      const chatBox = document.getElementById('chatBox');
+      const userInput = document.getElementById('userInput');
+      let isProcessing = false;
 
-    // Local Storage Functions
-    function saveToLocal(key, data) {
-      try {
-        localStorage.setItem('infohealth_' + key, JSON.stringify(data));
-      } catch(e) {
-        console.warn('localStorage not available');
+      // Simple toggle language function
+      function toggleLanguage() {
+        const comingSoonMessage = "**Traducción al Español - Próximamente**\n\nLa función de traducción completa estará disponible pronto. Por ahora, puede continuar usando InfoHealth AI en inglés para obtener información médica precisa.\n\n*Complete Spanish translation feature coming soon. You can continue using InfoHealth AI in English for accurate medical information.*";
+        addBubble(comingSoonMessage, 'bot', true);
       }
-    }
 
-    function getFromLocal(key) {
-      try {
-        const data = localStorage.getItem('infohealth_' + key);
-        if (data) {
-          return JSON.parse(data);
-        }
-      } catch(e) {
-        console.warn('localStorage not available');
-      }
-      if (key === 'myInfo') return {};
-      return [];
-    }
-
-    // Typewriter effect function
-    function typeWriter(element, text, speed = 40) {
-      let i = 0;
-      element.innerHTML = '';
-      function type() {
-        if (i < text.length) {
-          element.innerHTML += text.charAt(i);
-          i++;
-          setTimeout(type, speed);
+      // Local Storage Functions
+      function saveToLocal(key, data) {
+        try {
+          localStorage.setItem('infohealth_' + key, JSON.stringify(data));
+        } catch(e) {
+          console.warn('localStorage not available');
         }
       }
-      type();
-    }
 
-    // Add message with typewriter effect
-    function addBubble(text, role, useTypewriter = false) {
-      const wrap = document.createElement('div');
-      wrap.className = `bubble-wrapper ${role}`;
-
-      const avatar = role === 'user' 
-        ? './infohealth-user-logo.png'
-        : './infohealth-logo-small.png';
-
-      wrap.innerHTML = `
-        <div class="avatar"><img src="${avatar}" alt="${role}" /></div>
-        <div class="message"></div>`;
-
-      chatBox.appendChild(wrap);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      const messageElement = wrap.querySelector('.message');
-
-      if (useTypewriter && role === 'bot') {
-        typeWriter(messageElement, text, 30);
-      } else {
-        messageElement.innerHTML = text;
+      function getFromLocal(key) {
+        try {
+          const data = localStorage.getItem('infohealth_' + key);
+          if (data) {
+            return JSON.parse(data);
+          }
+        } catch(e) {
+          console.warn('localStorage not available');
+        }
+        if (key === 'myInfo') return {};
+        return [];
       }
-    }
 
-    // Update AI status indicator
-    function updateAIStatus(status, type = 'success') {
-      const statusElement = document.getElementById('aiStatus');
-      if (statusElement) {
-        statusElement.textContent = status;
-        if (type === 'error') {
-          statusElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #e74c3c 100%)';
-        } else if (type === 'warning') {
-          statusElement.style.background = 'linear-gradient(135deg, #ffc107 0%, #e0a800 100%)';
+      // Typewriter effect function
+      function typeWriter(element, text, speed = 40) {
+        let i = 0;
+        element.innerHTML = '';
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+          }
+        }
+        type();
+      }
+
+      // Add message with typewriter effect
+      function addBubble(text, role, useTypewriter = false) {
+        const wrap = document.createElement('div');
+        wrap.className = `bubble-wrapper ${role}`;
+
+        const avatar = role === 'user' 
+          ? './infohealth-user-logo.png'
+          : './infohealth-logo-small.png';
+
+        wrap.innerHTML = `
+          <div class="avatar"><img src="${avatar}" alt="${role}" /></div>
+          <div class="message"></div>`;
+
+        chatBox.appendChild(wrap);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const messageElement = wrap.querySelector('.message');
+
+        if (useTypewriter && role === 'bot') {
+          typeWriter(messageElement, text, 30);
         } else {
-          statusElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+          messageElement.innerHTML = text;
         }
       }
-    }
 
-    // Go back to home/welcome screen
-    function goHome() {
-      clearAllChatMessages();
-    }
-
-    // Clear all chat messages except welcome message
-    function clearAllChatMessages() {
-      const allMessages = chatBox.querySelectorAll('.bubble-wrapper');
-      for (let i = 1; i < allMessages.length; i++) {
-        chatBox.removeChild(allMessages[i]);
+      // Update AI status indicator
+      function updateAIStatus(status, type = 'success') {
+        const statusElement = document.getElementById('aiStatus');
+        if (statusElement) {
+          statusElement.textContent = status;
+          if (type === 'error') {
+            statusElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #e74c3c 100%)';
+          } else if (type === 'warning') {
+            statusElement.style.background = 'linear-gradient(135deg, #ffc107 0%, #e0a800 100%)';
+          } else {
+            statusElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+          }
+        }
       }
-    }
 
-    // Enhanced medical response with drug interactions and diabetes focus
-    function getMedicalResponse(query, aiCategory = null) {
-      const disclaimer = "*Consult healthcare professionals for medical advice.*\n\n";
-      const queryLower = query.toLowerCase();
-      
-      // HYPERTENSION with Drug Interactions
-      if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || queryLower.includes('high pressure') || queryLower.includes('manage blood pressure') || queryLower.includes('bp')) {
-        return `${disclaimer}**Hypertension (High Blood Pressure)**
+      // Go back to home/welcome screen
+      window.goHome = function() {
+        clearAllChatMessages();
+      }
+
+      // Clear all chat messages except welcome message
+      function clearAllChatMessages() {
+        const allMessages = chatBox.querySelectorAll('.bubble-wrapper');
+        for (let i = 1; i < allMessages.length; i++) {
+          chatBox.removeChild(allMessages[i]);
+        }
+      }
+
+      // Enhanced medical response with drug interactions and diabetes focus
+      function getMedicalResponse(query, aiCategory = null) {
+        const disclaimer = "*Consult healthcare professionals for medical advice.*\n\n";
+        const queryLower = query.toLowerCase();
+        
+        // HYPERTENSION with Drug Interactions
+        if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || queryLower.includes('high pressure') || queryLower.includes('manage blood pressure') || queryLower.includes('bp')) {
+          return `${disclaimer}**Hypertension (High Blood Pressure)**
 
 **What It Is:**
 Blood pressure consistently 130/80 mmHg or higher. The "silent killer" because it often has no symptoms.
@@ -868,11 +874,11 @@ Blood pressure consistently 130/80 mmHg or higher. The "silent killer" because i
 • **Alcohol** - can enhance BP medication effects causing dizziness
 
 **Target:** Less than 130/80 mmHg for most adults`;
-      }
+        }
 
-      // CHOLESTEROL with Drug Interactions
-      if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl') || queryLower.includes('manage cholesterol') || queryLower.includes('statins')) {
-        return `${disclaimer}**High Cholesterol**
+        // CHOLESTEROL with Drug Interactions
+        if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl') || queryLower.includes('manage cholesterol') || queryLower.includes('statins')) {
+          return `${disclaimer}**High Cholesterol**
 
 **Types:**
 • LDL "bad" cholesterol - builds up in arteries
@@ -915,11 +921,11 @@ Blood pressure consistently 130/80 mmHg or higher. The "silent killer" because i
 • LDL: <100 mg/dL  
 • HDL: >40 mg/dL (men), >50 mg/dL (women)
 • Triglycerides: <150 mg/dL`;
-      }
+        }
 
-      // ASTHMA with Drug Interactions
-      if (queryLower.includes('asthma') || queryLower.includes('inhaler') || queryLower.includes('wheezing') || queryLower.includes('manage asthma') || queryLower.includes('albuterol') || queryLower.includes('ventolin')) {
-        return `${disclaimer}**Asthma**
+        // ASTHMA with Drug Interactions
+        if (queryLower.includes('asthma') || queryLower.includes('inhaler') || queryLower.includes('wheezing') || queryLower.includes('manage asthma') || queryLower.includes('albuterol') || queryLower.includes('ventolin')) {
+          return `${disclaimer}**Asthma**
 
 **Common Symptoms:**
 • Wheezing and shortness of breath
@@ -959,11 +965,11 @@ Blood pressure consistently 130/80 mmHg or higher. The "silent killer" because i
 • Cannot speak in full sentences
 • Blue lips or fingernails
 • No improvement with rescue inhaler - CALL 911`;
-      }
+        }
 
-      // COMPREHENSIVE DIABETES with Drug Interactions
-      if (queryLower.includes('diabetes') || queryLower.includes('diabetic') || queryLower.includes('blood sugar') || queryLower.includes('glucose') || queryLower.includes('insulin') || queryLower.includes('a1c') || queryLower.includes('manage diabetes') || queryLower.includes('metformin')) {
-        return `${disclaimer}**Diabetes Management**
+        // COMPREHENSIVE DIABETES with Drug Interactions
+        if (queryLower.includes('diabetes') || queryLower.includes('diabetic') || queryLower.includes('blood sugar') || queryLower.includes('glucose') || queryLower.includes('insulin') || queryLower.includes('a1c') || queryLower.includes('manage diabetes') || queryLower.includes('metformin')) {
+          return `${disclaimer}**Diabetes Management**
 
 **What Is Diabetes:**
 A condition where blood glucose (sugar) levels stay too high due to problems with insulin production or function.
@@ -1027,11 +1033,11 @@ A condition where blood glucose (sugar) levels stay too high due to problems wit
 • **Blood sugar >300 mg/dL** - Seek immediate care
 • **Signs of DKA:** Nausea, vomiting, fruity breath, confusion
 • **Severe low blood sugar:** Confusion, sweating, unconsciousness - Give glucose/call 911`;
-      }
+        }
 
-      // Enhanced keyword detection for diabetes-related queries
-      if (queryLower.includes('what is insulin') || queryLower.includes('insulin shots') || queryLower.includes('diabetic medication')) {
-        return `${disclaimer}**Insulin and Diabetes Medications**
+        // Enhanced keyword detection for diabetes-related queries
+        if (queryLower.includes('what is insulin') || queryLower.includes('insulin shots') || queryLower.includes('diabetic medication')) {
+          return `${disclaimer}**Insulin and Diabetes Medications**
 
 **What Is Insulin:**
 A hormone made by the pancreas that acts like a "key" to let glucose into your cells for energy.
@@ -1062,9 +1068,9 @@ A hormone made by the pancreas that acts like a "key" to let glucose into your c
 • Store insulin properly (refrigerate unopened, room temp when in use)
 • Never share needles or insulin pens
 • Check expiration dates regularly`;
-      }
+        }
 
-      return `I specialize in **Hypertension, Cholesterol, Asthma, and Diabetes**.
+        return `I specialize in **Hypertension, Cholesterol, Asthma, and Diabetes**.
 
 Try asking:
 • "How do I manage high blood pressure?"  
@@ -1074,1026 +1080,1038 @@ Try asking:
 • "What are diabetes medications?"
 
 Click the topic cards above for quick access!`;
-    }
-
-    // Calendar Functions
-    let currentCalendarDate = new Date();
-
-    function showCalendar() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Calendar', 'user');
-      const calendarHTML = `
-        <div class="form-container">
-          <h3>My Calendar</h3>
-          <div class="calendar-header">
-            <button class="calendar-nav" onclick="changeMonth(-1)">‹ Prev</button>
-            <div class="calendar-month-year" id="monthYear"></div>
-            <button class="calendar-nav" onclick="changeMonth(1)">Next ›</button>
-          </div>
-          <div class="calendar-grid" id="calendarGrid"></div>
-          <div id="selectedDateEvents" style="margin-top: 1rem;"></div>
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
-            <h4 style="margin-bottom: 0.5rem; color: #333;">➕ Add New Event</h4>
-            <div class="form-group">
-              <label>Event Title:</label>
-              <input type="text" id="eventTitle" placeholder="Doctor visit, medication reminder, etc.">
-            </div>
-            <div class="form-group">
-              <label>Date & Time:</label>
-              <input type="datetime-local" id="eventDateTime">
-            </div>
-            <div class="form-group">
-              <label>Description:</label>
-              <textarea id="eventDescription" placeholder="Event details"></textarea>
-            </div>
-            <button class="btn" onclick="addCalendarEvent()">📅 Add Event</button>
-          </div>
-          <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(calendarHTML, 'bot');
-      setTimeout(() => {
-        renderCalendar();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function changeMonth(direction) {
-      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
-      renderCalendar();
-    }
-
-    function renderCalendar() {
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
-      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      
-      const monthYearElement = document.getElementById('monthYear');
-      const gridElement = document.getElementById('calendarGrid');
-      
-      if (!monthYearElement || !gridElement) return;
-
-      monthYearElement.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
-      gridElement.innerHTML = '';
-
-      dayNames.forEach(day => {
-        const dayHeader = document.createElement('div');
-        dayHeader.className = 'calendar-day-header';
-        dayHeader.textContent = day;
-        gridElement.appendChild(dayHeader);
-      });
-
-      const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
-      const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
-      const daysInMonth = lastDay.getDate();
-      const startingDayOfWeek = firstDay.getDay();
-
-      const appointments = getFromLocal('appointments');
-      const events = getFromLocal('calendar');
-      const allEvents = [...appointments, ...events];
-
-      const prevMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 0);
-      for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day other-month';
-        dayElement.textContent = prevMonth.getDate() - i;
-        gridElement.appendChild(dayElement);
       }
 
-      const today = new Date();
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day';
-        dayElement.textContent = day;
+      // Calendar Functions
+      let currentCalendarDate = new Date();
 
-        const currentDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), day);
+      window.showCalendar = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
         
-        if (currentDay.toDateString() === today.toDateString()) {
-          dayElement.classList.add('today');
-        }
+        addBubble('Calendar', 'user');
+        const calendarHTML = `
+          <div class="form-container">
+            <h3>My Calendar</h3>
+            <div class="calendar-header">
+              <button class="calendar-nav" onclick="changeMonth(-1)">‹ Prev</button>
+              <div class="calendar-month-year" id="monthYear"></div>
+              <button class="calendar-nav" onclick="changeMonth(1)">Next ›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div id="selectedDateEvents" style="margin-top: 1rem;"></div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+              <h4 style="margin-bottom: 0.5rem; color: #333;">➕ Add New Event</h4>
+              <div class="form-group">
+                <label>Event Title:</label>
+                <input type="text" id="eventTitle" placeholder="Doctor visit, medication reminder, etc.">
+              </div>
+              <div class="form-group">
+                <label>Date & Time:</label>
+                <input type="datetime-local" id="eventDateTime">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <textarea id="eventDescription" placeholder="Event details"></textarea>
+              </div>
+              <button class="btn" onclick="addCalendarEvent()">📅 Add Event</button>
+            </div>
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
 
-        const hasEvents = allEvents.some(event => {
-          const eventDate = new Date(event.dateTime);
-          return eventDate.toDateString() === currentDay.toDateString();
+        addBubble(calendarHTML, 'bot');
+        setTimeout(() => {
+          renderCalendar();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.changeMonth = function(direction) {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+        renderCalendar();
+      }
+
+      function renderCalendar() {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"];
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        
+        const monthYearElement = document.getElementById('monthYear');
+        const gridElement = document.getElementById('calendarGrid');
+        
+        if (!monthYearElement || !gridElement) return;
+
+        monthYearElement.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
+        gridElement.innerHTML = '';
+
+        dayNames.forEach(day => {
+          const dayHeader = document.createElement('div');
+          dayHeader.className = 'calendar-day-header';
+          dayHeader.textContent = day;
+          gridElement.appendChild(dayHeader);
         });
 
-        if (hasEvents) {
-          dayElement.classList.add('has-appointment');
-        }
+        const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+        const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
 
-        dayElement.onclick = () => showDayEvents(currentDay);
-        gridElement.appendChild(dayElement);
-      }
-
-      const totalCells = gridElement.children.length;
-      const remainingCells = 42 - totalCells;
-      for (let day = 1; day <= remainingCells; day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day other-month';
-        dayElement.textContent = day;
-        gridElement.appendChild(dayElement);
-      }
-    }
-
-    function showDayEvents(date) {
-      const appointments = getFromLocal('appointments');
-      const events = getFromLocal('calendar');
-      const allEvents = [...appointments, ...events];
-
-      const dayEvents = allEvents.filter(event => {
-        const eventDate = new Date(event.dateTime);
-        return eventDate.toDateString() === date.toDateString();
-      });
-
-      const eventsContainer = document.getElementById('selectedDateEvents');
-      if (!eventsContainer) return;
-
-      if (dayEvents.length === 0) {
-        eventsContainer.innerHTML = `<p style="text-align: center; color: #666; font-size: 0.8rem;">No events on ${date.toLocaleDateString()}</p>`;
-        return;
-      }
-
-      eventsContainer.innerHTML = `
-        <h4 style="color: #333; margin-bottom: 0.5rem;">Events on ${date.toLocaleDateString()}</h4>
-        ${dayEvents.map(event => {
-          const eventTime = new Date(event.dateTime);
-          const isAppointment = event.doctor;
-
-          return `
-            <div class="info-item" style="cursor: pointer;" onclick="${isAppointment ? `viewAppointment(${event.id})` : ''}">
-              <div>
-                <strong>${isAppointment ? '📋 ' + event.doctor + ' - ' + event.type : '📅 ' + event.title}</strong><br>
-                <small style="color: #666;">🕐 ${eventTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
-                ${event.location ? `<br><small style="color: #666;">📍 ${event.location}</small>` : ''}
-              </div>
-              ${isAppointment ? '<span style="color: #DAA520;">👁️ View</span>' : ''}
-            </div>
-          `;
-        }).join('')}
-      `;
-    }
-
-    function addCalendarEvent() {
-      const title = document.getElementById('eventTitle').value;
-      const dateTime = document.getElementById('eventDateTime').value;
-      const description = document.getElementById('eventDescription').value;
-
-      if (title && dateTime) {
-        const events = getFromLocal('calendar');
-        const newEvent = {
-          id: Date.now(),
-          title,
-          dateTime,
-          description,
-          created: new Date().toISOString()
-        };
-
-        events.push(newEvent);
-        saveToLocal('calendar', events);
-
-        document.getElementById('eventTitle').value = '';
-        document.getElementById('eventDateTime').value = '';
-        document.getElementById('eventDescription').value = '';
-
-        showSuccessMessage('✅ Event added to calendar!');
-        renderCalendar();
-      } else {
-        showErrorMessage('Please fill in title and date/time');
-      }
-    }
-
-    // My Info Functions
-    function showMyInfo() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('My Info', 'user');
-      const myInfoHTML = `
-        <div class="form-container">
-          <h3>My Medical Profile</h3>
-          <div id="myInfoDisplay"></div>
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
-            <h4 style="color: #28a745; margin-bottom: 0.8rem;">✏️ Update Medical Profile</h4>
-            <h5 style="color: #28a745; margin-top: 1rem;">Personal Information</h5>
-            <div class="form-group">
-              <label>Full Name:</label>
-              <input type="text" id="infoName" placeholder="John Doe">
-            </div>
-            <div class="form-group">
-              <label>Date of Birth:</label>
-              <input type="date" id="infoDOB">
-            </div>
-            <div class="form-group">
-              <label>Blood Type:</label>
-              <select id="infoBloodType">
-                <option value="">Select blood type</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
-            </div>
-            <h5 style="color: #28a745; margin-top: 1rem;">Medical Information</h5>
-            <div class="form-group">
-              <label>Current Medications:</label>
-              <textarea id="infoMedications" placeholder="List your current medications and dosages"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Medical Conditions:</label>
-              <textarea id="infoConditions" placeholder="List any medical conditions, allergies"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Primary Care Doctor:</label>
-              <input type="text" id="infoPrimaryDoctor" placeholder="Dr. Smith - (555) 123-4567">
-            </div>
-            <button class="btn" onclick="saveMyInfo()">💾 Save My Info</button>
-          </div>
-          <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(myInfoHTML, 'bot');
-      setTimeout(() => {
-        loadMyInfo();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function saveMyInfo() {
-      const myInfo = {
-        name: document.getElementById('infoName').value,
-        dob: document.getElementById('infoDOB').value,
-        bloodType: document.getElementById('infoBloodType').value,
-        medications: document.getElementById('infoMedications').value,
-        conditions: document.getElementById('infoConditions').value,
-        primaryDoctor: document.getElementById('infoPrimaryDoctor').value,
-        updated: new Date().toISOString()
-      };
-
-      saveToLocal('myInfo', myInfo);
-      showSuccessMessage('✅ Your medical profile has been saved!');
-      loadMyInfo();
-    }
-
-    function loadMyInfo() {
-      const myInfo = getFromLocal('myInfo');
-      const displayElement = document.getElementById('myInfoDisplay');
-      
-      if (displayElement) {
-        if (Object.keys(myInfo).length === 0) {
-          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">Complete your medical profile below.</p>';
-        } else {
-          displayElement.innerHTML = `
-            <div class="info-section">
-              <h4>👤 Personal Information</h4>
-              ${myInfo.name ? `<div class="info-item"><strong>Name:</strong> ${myInfo.name}</div>` : ''}
-              ${myInfo.dob ? `<div class="info-item"><strong>Date of Birth:</strong> ${new Date(myInfo.dob).toLocaleDateString()}</div>` : ''}
-              ${myInfo.bloodType ? `<div class="info-item"><strong>Blood Type:</strong> ${myInfo.bloodType}</div>` : ''}
-            </div>
-            <div class="info-section">
-              <h4>⚕️ Medical Information</h4>
-              ${myInfo.medications ? `<div class="info-item"><strong>Medications:</strong><br>${myInfo.medications}</div>` : ''}
-              ${myInfo.conditions ? `<div class="info-item"><strong>Conditions:</strong><br>${myInfo.conditions}</div>` : ''}
-              ${myInfo.primaryDoctor ? `<div class="info-item"><strong>Primary Doctor:</strong> ${myInfo.primaryDoctor}</div>` : ''}
-            </div>
-          `;
-        }
-        
-        if (myInfo.name) {
-          document.getElementById('infoName').value = myInfo.name || '';
-          document.getElementById('infoDOB').value = myInfo.dob || '';
-          document.getElementById('infoBloodType').value = myInfo.bloodType || '';
-          document.getElementById('infoMedications').value = myInfo.medications || '';
-          document.getElementById('infoConditions').value = myInfo.conditions || '';
-          document.getElementById('infoPrimaryDoctor').value = myInfo.primaryDoctor || '';
-        }
-      }
-    }
-
-    // Appointments Functions
-    function showAppointments() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-
-      addBubble('Appointments', 'user');
-      const appointmentsHTML = `
-        <div class="form-container">
-          <h3>My Appointments</h3>
-          <div id="appointmentsList"></div>
-          <div class="form-group">
-            <label>Doctor/Provider:</label>
-            <input type="text" id="appointmentDoctor" placeholder="Dr. John Smith">
-          </div>
-          <div class="form-group">
-            <label>Appointment Date & Time:</label>
-            <input type="datetime-local" id="appointmentDateTime">
-          </div>
-          <div class="form-group">
-            <label>Type of Visit:</label>
-            <select id="appointmentType">
-              <option value="checkup">Regular Checkup</option>
-              <option value="followup">Follow-up</option>
-              <option value="consultation">Consultation</option>
-              <option value="specialist">Specialist</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Location/Address:</label>
-            <input type="text" id="appointmentLocation" placeholder="123 Medical Center Dr">
-          </div>
-          <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(appointmentsHTML, 'bot');
-      setTimeout(() => {
-        loadAppointments();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function addAppointment() {
-      const doctor = document.getElementById('appointmentDoctor').value;
-      const dateTime = document.getElementById('appointmentDateTime').value;
-      const type = document.getElementById('appointmentType').value;
-      const location = document.getElementById('appointmentLocation').value;
-
-      if (doctor && dateTime) {
         const appointments = getFromLocal('appointments');
-        const newAppointment = {
-          id: Date.now(),
-          doctor,
-          dateTime,
-          type,
-          location,
-          status: 'scheduled',
-          created: new Date().toISOString()
-        };
+        const events = getFromLocal('calendar');
+        const allEvents = [...appointments, ...events];
 
-        appointments.push(newAppointment);
-        saveToLocal('appointments', appointments);
-
-        document.getElementById('appointmentDoctor').value = '';
-        document.getElementById('appointmentDateTime').value = '';
-        document.getElementById('appointmentLocation').value = '';
-
-        showSuccessMessage('✅ Appointment scheduled!');
-        loadAppointments();
-      }
-    }
-
-    function loadAppointments() {
-      const appointments = getFromLocal('appointments');
-      const listElement = document.getElementById('appointmentsList');
-      if (listElement) {
-        listElement.innerHTML = appointments.map(appointment => {
-          const appointmentDate = new Date(appointment.dateTime);
-          return `
-            <div class="appointment-item">
-              <div class="appointment-doctor">${appointment.doctor}</div>
-              <div class="appointment-type">${appointment.type}</div>
-              <div class="appointment-datetime">
-                📅 ${appointmentDate.toLocaleDateString()} at ${appointmentDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-              </div>
-              ${appointment.location ? `<div class="appointment-location">📍 ${appointment.location}</div>` : ''}
-            </div>
-          `;
-        }).join('') || '<p style="text-align: center; color: #666; padding: 1rem;">No appointments scheduled.</p>';
-      }
-    }
-
-    // Medications Functions
-    function showMedications() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Medications', 'user');
-      const medicationsHTML = `
-        <div class="form-container">
-          <h3>My Medications</h3>
-          <div id="medicationsList"></div>
-          <div class="form-group">
-            <label>Medication Name:</label>
-            <input type="text" id="medName" placeholder="Lisinopril, Metformin, etc.">
-          </div>
-          <div class="form-group">
-            <label>Dosage:</label>
-            <input type="text" id="medDosage" placeholder="10mg, 500mg, etc.">
-          </div>
-          <div class="form-group">
-            <label>Times Per Day:</label>
-            <select id="medTimesPerDay">
-              <option value="1">1 time per day</option>
-              <option value="2">2 times per day</option>
-              <option value="3">3 times per day</option>
-              <option value="As needed">As needed</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Prescribed By:</label>
-            <input type="text" id="medPrescribedBy" placeholder="Dr. Smith">
-          </div>
-          <button class="btn" onclick="addMedication()">💊 Save Medication</button>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(medicationsHTML, 'bot');
-      setTimeout(() => {
-        loadMedications();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function addMedication() {
-      const name = document.getElementById('medName').value;
-      const dosage = document.getElementById('medDosage').value;
-      const timesPerDay = document.getElementById('medTimesPerDay').value;
-      const prescribedBy = document.getElementById('medPrescribedBy').value;
-
-      if (name && dosage) {
-        const medications = getFromLocal('medications');
-        const newMedication = {
-          id: Date.now(),
-          name,
-          dosage,
-          timesPerDay,
-          prescribedBy,
-          active: true,
-          created: new Date().toISOString()
-        };
-
-        medications.push(newMedication);
-        saveToLocal('medications', medications);
-
-        document.getElementById('medName').value = '';
-        document.getElementById('medDosage').value = '';
-        document.getElementById('medPrescribedBy').value = '';
-
-        showSuccessMessage('✅ Medication added!');
-        loadMedications();
-      }
-    }
-
-    function loadMedications() {
-      const medications = getFromLocal('medications');
-      const listElement = document.getElementById('medicationsList');
-      
-      if (listElement) {
-        const activeMeds = medications.filter(med => med.active);
-        
-        if (activeMeds.length === 0) {
-          listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications tracked yet.</p>';
-          return;
+        const prevMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 0);
+        for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day other-month';
+          dayElement.textContent = prevMonth.getDate() - i;
+          gridElement.appendChild(dayElement);
         }
 
-        listElement.innerHTML = `
-          <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">💊 Active Medications</h4>
-          ${activeMeds.map(med => {
-            const timesDisplay = med.timesPerDay + ' times daily';
-            
-            return `
-              <div class="medication-item info-item">
-                <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                    <strong style="color: #17a2b8;">${med.name} ${med.dosage}</strong>
-                    <span class="medication-time">${timesDisplay}</span>
-                  </div>
-                  <div style="font-size: 0.75rem; color: #666;">
-                    ${med.prescribedBy ? `👨‍⚕️ ${med.prescribedBy}` : ''}
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        `;
-      }
-    }
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day';
+          dayElement.textContent = day;
 
-    // Enhanced Health Tools Functions
-    function showDrugChecker() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Drug Checker', 'user');
-      const drugCheckerHTML = `
-        <div class="form-container">
-          <h3>💊 Drug Interaction Checker</h3>
-          <div id="currentMedicationsCheck"></div>
-          <div class="form-group">
-            <label>Add Medication to Check:</label>
-            <input type="text" id="newDrugName" placeholder="Enter medication name">
-          </div>
-          <button class="btn" onclick="checkDrugInteractions()">🔍 Check Interactions</button>
-          <div id="interactionResults" style="margin-top: 1rem;"></div>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(drugCheckerHTML, 'bot');
-      setTimeout(() => {
-        loadCurrentMedicationsForCheck();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function showHealthTracker() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Health Tracker', 'user');
-      const trackerHTML = `
-        <div class="form-container">
-          <h3>📊 Health Tracker</h3>
-          <div id="healthStats"></div>
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
-            <h4 style="color: #28a745; margin-bottom: 0.8rem;">📈 Add New Reading</h4>
-            <div class="form-group">
-              <label>Measurement Type:</label>
-              <select id="measurementType">
-                <option value="blood_pressure">Blood Pressure</option>
-                <option value="blood_sugar">Blood Sugar</option>
-                <option value="weight">Weight</option>
-                <option value="heart_rate">Heart Rate</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Value:</label>
-              <input type="text" id="measurementValue" placeholder="e.g., 120/80, 95, 150 lbs, 72 bpm">
-            </div>
-            <div class="form-group">
-              <label>Date & Time:</label>
-              <input type="datetime-local" id="measurementDateTime">
-            </div>
-            <button class="btn" onclick="addHealthMeasurement()">📊 Add Reading</button>
-          </div>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(trackerHTML, 'bot');
-      setTimeout(() => {
-        loadHealthStats();
-        setCurrentDateTime('measurementDateTime');
-        isProcessing = false;
-      }, 500);
-    }
-
-    function showReminders() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Reminders', 'user');
-      const remindersHTML = `
-        <div class="form-container">
-          <h3>⏰ Medication Reminders</h3>
-          <div id="activeReminders"></div>
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
-            <h4 style="color: #28a745; margin-bottom: 0.8rem;">➕ Set New Reminder</h4>
-            <div class="form-group">
-              <label>Medication:</label>
-              <input type="text" id="reminderMedication" placeholder="Medication name">
-            </div>
-            <div class="form-group">
-              <label>Time:</label>
-              <input type="time" id="reminderTime">
-            </div>
-            <div class="form-group">
-              <label>Frequency:</label>
-              <select id="reminderFrequency">
-                <option value="daily">Daily</option>
-                <option value="twice_daily">Twice Daily</option>
-                <option value="three_times">Three Times Daily</option>
-                <option value="weekly">Weekly</option>
-              </select>
-            </div>
-            <button class="btn" onclick="addReminder()">⏰ Set Reminder</button>
-          </div>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(remindersHTML, 'bot');
-      setTimeout(() => {
-        loadActiveReminders();
-        isProcessing = false;
-      }, 500);
-    }
-
-    function showEmergencyInfo() {
-      if (isProcessing) return;
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble('Emergency', 'user');
-      const emergencyHTML = `
-        <div class="form-container">
-          <h3>🚨 Emergency Information</h3>
-          <div id="emergencyDisplay"></div>
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
-            <h4 style="color: #dc3545; margin-bottom: 0.8rem;">🆘 Update Emergency Info</h4>
-            <div class="form-group">
-              <label>Emergency Contact Name:</label>
-              <input type="text" id="emergencyContactName" placeholder="John Smith">
-            </div>
-            <div class="form-group">
-              <label>Emergency Contact Phone:</label>
-              <input type="tel" id="emergencyContactPhone" placeholder="(555) 123-4567">
-            </div>
-            <div class="form-group">
-              <label>Medical Allergies:</label>
-              <textarea id="emergencyAllergies" placeholder="Penicillin, shellfish, etc."></textarea>
-            </div>
-            <div class="form-group">
-              <label>Critical Medical Conditions:</label>
-              <textarea id="emergencyConditions" placeholder="Diabetes, heart condition, etc."></textarea>
-            </div>
-            <button class="btn" onclick="saveEmergencyInfo()">🆘 Save Emergency Info</button>
-          </div>
-          <div style="margin-top: 2rem; text-align: center;">
-            <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
-          </div>
-        </div>`;
-
-      addBubble(emergencyHTML, 'bot');
-      setTimeout(() => {
-        loadEmergencyInfo();
-        isProcessing = false;
-      }, 500);
-    }
-
-    // Utility functions
-    function openVideo(videoUrl) {
-      // Open any video URL in a new tab/window
-      if (videoUrl) {
-        window.open(videoUrl, '_blank');
-      }
-    }
-
-    function showSuccessMessage(message) {
-      const tempMessage = document.createElement('div');
-      tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
-      tempMessage.textContent = message;
-      document.body.appendChild(tempMessage);
-      
-      setTimeout(() => {
-        if (document.body.contains(tempMessage)) {
-          document.body.removeChild(tempMessage);
-        }
-      }, 2000);
-    }
-
-    function showErrorMessage(message) {
-      const tempMessage = document.createElement('div');
-      tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #dc3545; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
-      tempMessage.textContent = message;
-      document.body.appendChild(tempMessage);
-      
-      setTimeout(() => {
-        if (document.body.contains(tempMessage)) {
-          document.body.removeChild(tempMessage);
-        }
-      }, 2000);
-    }
-
-    // Enhanced Logic Support Functions
-    function loadCurrentMedicationsForCheck() {
-      const medications = getFromLocal('medications');
-      const activeMeds = medications.filter(med => med.active);
-      const displayElement = document.getElementById('currentMedicationsCheck');
-      
-      if (displayElement) {
-        if (activeMeds.length === 0) {
-          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications found. Add medications in "My Info" or "Medications" section first.</p>';
-        } else {
-          displayElement.innerHTML = `
-            <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">Current Medications:</h4>
-            ${activeMeds.map(med => `
-              <div class="info-item">
-                <strong>${med.name} ${med.dosage}</strong> - ${med.timesPerDay} times daily
-              </div>
-            `).join('')}
-          `;
-        }
-      }
-    }
-
-    function checkDrugInteractions() {
-      const newDrug = document.getElementById('newDrugName').value.toLowerCase();
-      const medications = getFromLocal('medications');
-      const activeMeds = medications.filter(med => med.active);
-      const resultsElement = document.getElementById('interactionResults');
-      
-      if (!newDrug) {
-        showErrorMessage('Please enter a medication name');
-        return;
-      }
-
-      // Basic drug interaction database (simplified)
-      const interactions = {
-        'warfarin': ['aspirin', 'ibuprofen', 'simvastatin', 'metformin'],
-        'aspirin': ['warfarin', 'lisinopril', 'metformin'],
-        'ibuprofen': ['warfarin', 'lisinopril', 'losartan', 'metoprolol'],
-        'lisinopril': ['potassium', 'ibuprofen', 'aspirin'],
-        'metformin': ['alcohol', 'warfarin', 'contrast dye'],
-        'simvastatin': ['grapefruit', 'warfarin', 'gemfibrozil'],
-        'losartan': ['potassium', 'ibuprofen', 'naproxen'],
-        'albuterol': ['propranolol', 'metoprolol', 'atenolol']
-      };
-
-      let foundInteractions = [];
-      
-      activeMeds.forEach(med => {
-        const medName = med.name.toLowerCase();
-        if (interactions[newDrug] && interactions[newDrug].includes(medName)) {
-          foundInteractions.push(`⚠️ ${newDrug.toUpperCase()} may interact with ${med.name}`);
-        }
-        if (interactions[medName] && interactions[medName].includes(newDrug)) {
-          foundInteractions.push(`⚠️ ${med.name} may interact with ${newDrug.toUpperCase()}`);
-        }
-      });
-
-      if (resultsElement) {
-        if (foundInteractions.length === 0) {
-          resultsElement.innerHTML = `
-            <div class="info-section">
-              <h4>✅ No Known Interactions Found</h4>
-              <p>No major interactions detected between ${newDrug.toUpperCase()} and your current medications.</p>
-              <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
-                *Always consult your healthcare provider before starting new medications.
-              </p>
-            </div>
-          `;
-        } else {
-          resultsElement.innerHTML = `
-            <div class="info-section" style="border-left-color: #dc3545;">
-              <h4 style="color: #dc3545;">⚠️ Potential Interactions Found</h4>
-              ${foundInteractions.map(interaction => `<div class="info-item" style="border-left-color: #dc3545;">${interaction}</div>`).join('')}
-              <p style="font-size: 0.8rem; color: #dc3545; margin-top: 0.5rem; font-weight: 600;">
-                **IMPORTANT: Contact your healthcare provider immediately before taking ${newDrug.toUpperCase()}**
-              </p>
-            </div>
-          `;
-        }
-      }
-
-      document.getElementById('newDrugName').value = '';
-    }
-
-    function loadHealthStats() {
-      const measurements = getFromLocal('healthMeasurements');
-      const displayElement = document.getElementById('healthStats');
-      
-      if (displayElement) {
-        if (measurements.length === 0) {
-          displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No health measurements recorded yet.</p>';
-          return;
-        }
-
-        // Group by type and show latest readings
-        const byType = {};
-        measurements.forEach(measurement => {
-          if (!byType[measurement.type]) {
-            byType[measurement.type] = [];
+          const currentDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), day);
+          
+          if (currentDay.toDateString() === today.toDateString()) {
+            dayElement.classList.add('today');
           }
-          byType[measurement.type].push(measurement);
+
+          const hasEvents = allEvents.some(event => {
+            const eventDate = new Date(event.dateTime);
+            return eventDate.toDateString() === currentDay.toDateString();
+          });
+
+          if (hasEvents) {
+            dayElement.classList.add('has-appointment');
+          }
+
+          dayElement.onclick = () => showDayEvents(currentDay);
+          gridElement.appendChild(dayElement);
+        }
+
+        const totalCells = gridElement.children.length;
+        const remainingCells = 42 - totalCells;
+        for (let day = 1; day <= remainingCells; day++) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day other-month';
+          dayElement.textContent = day;
+          gridElement.appendChild(dayElement);
+        }
+      }
+
+      function showDayEvents(date) {
+        const appointments = getFromLocal('appointments');
+        const events = getFromLocal('calendar');
+        const allEvents = [...appointments, ...events];
+
+        const dayEvents = allEvents.filter(event => {
+          const eventDate = new Date(event.dateTime);
+          return eventDate.toDateString() === date.toDateString();
         });
 
-        // Sort each type by date and get latest
-        Object.keys(byType).forEach(type => {
-          byType[type].sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
-        });
+        const eventsContainer = document.getElementById('selectedDateEvents');
+        if (!eventsContainer) return;
 
-        displayElement.innerHTML = `
-          <h4 style="color: #28a745; margin-bottom: 0.5rem;">📈 Latest Readings</h4>
-          ${Object.keys(byType).map(type => {
-            const latest = byType[type][0];
-            const typeNames = {
-              'blood_pressure': '🩺 Blood Pressure',
-              'blood_sugar': '🩸 Blood Sugar',
-              'weight': '⚖️ Weight',
-              'heart_rate': '💓 Heart Rate'
-            };
-            return `
-              <div class="info-item">
-                <div>
-                  <strong>${typeNames[type] || type}</strong><br>
-                  <span style="font-size: 1.1rem; color: #28a745; font-weight: 600;">${latest.value}</span><br>
-                  <small style="color: #666;">${new Date(latest.dateTime).toLocaleDateString()} at ${new Date(latest.dateTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
-                </div>
-                <span style="color: #666; font-size: 0.8rem;">${byType[type].length} readings</span>
-              </div>
-            `;
-          }).join('')}
-        `;
-      }
-    }
-
-    function addHealthMeasurement() {
-      const type = document.getElementById('measurementType').value;
-      const value = document.getElementById('measurementValue').value;
-      const dateTime = document.getElementById('measurementDateTime').value;
-
-      if (type && value && dateTime) {
-        const measurements = getFromLocal('healthMeasurements');
-        const newMeasurement = {
-          id: Date.now(),
-          type,
-          value,
-          dateTime,
-          created: new Date().toISOString()
-        };
-
-        measurements.push(newMeasurement);
-        saveToLocal('healthMeasurements', measurements);
-
-        document.getElementById('measurementValue').value = '';
-        setCurrentDateTime('measurementDateTime');
-
-        showSuccessMessage('✅ Health measurement recorded!');
-        loadHealthStats();
-      } else {
-        showErrorMessage('Please fill in all fields');
-      }
-    }
-
-    function loadActiveReminders() {
-      const reminders = getFromLocal('reminders');
-      const listElement = document.getElementById('activeReminders');
-      
-      if (listElement) {
-        if (reminders.length === 0) {
-          listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medication reminders set.</p>';
+        if (dayEvents.length === 0) {
+          eventsContainer.innerHTML = `<p style="text-align: center; color: #666; font-size: 0.8rem;">No events on ${date.toLocaleDateString()}</p>`;
           return;
         }
 
-        listElement.innerHTML = `
-          <h4 style="color: #28a745; margin-bottom: 0.5rem;">⏰ Active Reminders</h4>
-          ${reminders.map(reminder => {
-            const frequencyText = {
-              'daily': 'Daily',
-              'twice_daily': 'Twice Daily',
-              'three_times': '3 Times Daily',
-              'weekly': 'Weekly'
-            };
-            
+        eventsContainer.innerHTML = `
+          <h4 style="color: #333; margin-bottom: 0.5rem;">Events on ${date.toLocaleDateString()}</h4>
+          ${dayEvents.map(event => {
+            const eventTime = new Date(event.dateTime);
+            const isAppointment = event.doctor;
+
             return `
-              <div class="info-item">
+              <div class="info-item" style="cursor: pointer;" onclick="${isAppointment ? `viewAppointment(${event.id})` : ''}">
                 <div>
-                  <strong>${reminder.medication}</strong><br>
-                  <span style="color: #28a745;">🕐 ${reminder.time}</span> - ${frequencyText[reminder.frequency]}
+                  <strong>${isAppointment ? '📋 ' + event.doctor + ' - ' + event.type : '📅 ' + event.title}</strong><br>
+                  <small style="color: #666;">🕐 ${eventTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                  ${event.location ? `<br><small style="color: #666;">📍 ${event.location}</small>` : ''}
                 </div>
-                <button class="btn-secondary" onclick="deleteReminder(${reminder.id})" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">Delete</button>
+                ${isAppointment ? '<span style="color: #DAA520;">👁️ View</span>' : ''}
               </div>
             `;
           }).join('')}
         `;
       }
-    }
 
-    function addReminder() {
-      const medication = document.getElementById('reminderMedication').value;
-      const time = document.getElementById('reminderTime').value;
-      const frequency = document.getElementById('reminderFrequency').value;
+      window.addCalendarEvent = function() {
+        const title = document.getElementById('eventTitle').value;
+        const dateTime = document.getElementById('eventDateTime').value;
+        const description = document.getElementById('eventDescription').value;
 
-      if (medication && time) {
-        const reminders = getFromLocal('reminders');
-        const newReminder = {
-          id: Date.now(),
-          medication,
-          time,
-          frequency,
-          active: true,
-          created: new Date().toISOString()
+        if (title && dateTime) {
+          const events = getFromLocal('calendar');
+          const newEvent = {
+            id: Date.now(),
+            title,
+            dateTime,
+            description,
+            created: new Date().toISOString()
+          };
+
+          events.push(newEvent);
+          saveToLocal('calendar', events);
+
+          document.getElementById('eventTitle').value = '';
+          document.getElementById('eventDateTime').value = '';
+          document.getElementById('eventDescription').value = '';
+
+          showSuccessMessage('✅ Event added to calendar!');
+          renderCalendar();
+        } else {
+          showErrorMessage('Please fill in title and date/time');
+        }
+      }
+
+      // My Info Functions
+      window.showMyInfo = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble('My Info', 'user');
+        const myInfoHTML = `
+          <div class="form-container">
+            <h3>My Medical Profile</h3>
+            <div id="myInfoDisplay"></div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+              <h4 style="color: #28a745; margin-bottom: 0.8rem;">✏️ Update Medical Profile</h4>
+              <h5 style="color: #28a745; margin-top: 1rem;">Personal Information</h5>
+              <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" id="infoName" placeholder="John Doe">
+              </div>
+              <div class="form-group">
+                <label>Date of Birth:</label>
+                <input type="date" id="infoDOB">
+              </div>
+              <div class="form-group">
+                <label>Blood Type:</label>
+                <select id="infoBloodType">
+                  <option value="">Select blood type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+              <h5 style="color: #28a745; margin-top: 1rem;">Medical Information</h5>
+              <div class="form-group">
+                <label>Current Medications:</label>
+                <textarea id="infoMedications" placeholder="List your current medications and dosages"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Medical Conditions:</label>
+                <textarea id="infoConditions" placeholder="List any medical conditions, allergies"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Primary Care Doctor:</label>
+                <input type="text" id="infoPrimaryDoctor" placeholder="Dr. Smith - (555) 123-4567">
+              </div>
+              <button class="btn" onclick="saveMyInfo()">💾 Save My Info</button>
+            </div>
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(myInfoHTML, 'bot');
+        setTimeout(() => {
+          loadMyInfo();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.saveMyInfo = function() {
+        const myInfo = {
+          name: document.getElementById('infoName').value,
+          dob: document.getElementById('infoDOB').value,
+          bloodType: document.getElementById('infoBloodType').value,
+          medications: document.getElementById('infoMedications').value,
+          conditions: document.getElementById('infoConditions').value,
+          primaryDoctor: document.getElementById('infoPrimaryDoctor').value,
+          updated: new Date().toISOString()
         };
 
-        reminders.push(newReminder);
-        saveToLocal('reminders', reminders);
-
-        document.getElementById('reminderMedication').value = '';
-        document.getElementById('reminderTime').value = '';
-
-        showSuccessMessage('⏰ Reminder set successfully!');
-        loadActiveReminders();
-      } else {
-        showErrorMessage('Please enter medication name and time');
+        saveToLocal('myInfo', myInfo);
+        showSuccessMessage('✅ Your medical profile has been saved!');
+        loadMyInfo();
       }
-    }
 
-    function deleteReminder(id) {
-      const reminders = getFromLocal('reminders');
-      const updatedReminders = reminders.filter(reminder => reminder.id !== id);
-      saveToLocal('reminders', updatedReminders);
-      showSuccessMessage('Reminder deleted');
-      loadActiveReminders();
-    }
+      function loadMyInfo() {
+        const myInfo = getFromLocal('myInfo');
+        const displayElement = document.getElementById('myInfoDisplay');
+        
+        if (displayElement) {
+          if (Object.keys(myInfo).length === 0) {
+            displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">Complete your medical profile below.</p>';
+          } else {
+            displayElement.innerHTML = `
+              <div class="info-section">
+                <h4>👤 Personal Information</h4>
+                ${myInfo.name ? `<div class="info-item"><strong>Name:</strong> ${myInfo.name}</div>` : ''}
+                ${myInfo.dob ? `<div class="info-item"><strong>Date of Birth:</strong> ${new Date(myInfo.dob).toLocaleDateString()}</div>` : ''}
+                ${myInfo.bloodType ? `<div class="info-item"><strong>Blood Type:</strong> ${myInfo.bloodType}</div>` : ''}
+              </div>
+              <div class="info-section">
+                <h4>⚕️ Medical Information</h4>
+                ${myInfo.medications ? `<div class="info-item"><strong>Medications:</strong><br>${myInfo.medications}</div>` : ''}
+                ${myInfo.conditions ? `<div class="info-item"><strong>Conditions:</strong><br>${myInfo.conditions}</div>` : ''}
+                ${myInfo.primaryDoctor ? `<div class="info-item"><strong>Primary Doctor:</strong> ${myInfo.primaryDoctor}</div>` : ''}
+              </div>
+            `;
+          }
+          
+          if (myInfo.name) {
+            document.getElementById('infoName').value = myInfo.name || '';
+            document.getElementById('infoDOB').value = myInfo.dob || '';
+            document.getElementById('infoBloodType').value = myInfo.bloodType || '';
+            document.getElementById('infoMedications').value = myInfo.medications || '';
+            document.getElementById('infoConditions').value = myInfo.conditions || '';
+            document.getElementById('infoPrimaryDoctor').value = myInfo.primaryDoctor || '';
+          }
+        }
+      }
 
-    function loadEmergencyInfo() {
-      const emergencyInfo = getFromLocal('emergencyInfo');
-      const displayElement = document.getElementById('emergencyDisplay');
-      
-      if (displayElement) {
-        if (Object.keys(emergencyInfo).length === 0) {
-          displayElement.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 1rem; font-weight: 600;">⚠️ No emergency information on file. Please complete below.</p>';
-        } else {
-          displayElement.innerHTML = `
-            <div class="info-section" style="border-left-color: #dc3545;">
-              <h4 style="color: #dc3545;">🆘 Emergency Contact</h4>
-              ${emergencyInfo.contactName ? `<div class="info-item"><strong>Contact:</strong> ${emergencyInfo.contactName}</div>` : ''}
-              ${emergencyInfo.contactPhone ? `<div class="info-item"><strong>Phone:</strong> ${emergencyInfo.contactPhone}</div>` : ''}
-              ${emergencyInfo.allergies ? `<div class="info-item"><strong>Allergies:</strong><br>${emergencyInfo.allergies}</div>` : ''}
-              ${emergencyInfo.conditions ? `<div class="info-item"><strong>Critical Conditions:</strong><br>${emergencyInfo.conditions}</div>` : ''}
+      // Appointments Functions
+      window.showAppointments = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+
+        addBubble('Appointments', 'user');
+        const appointmentsHTML = `
+          <div class="form-container">
+            <h3>My Appointments</h3>
+            <div id="appointmentsList"></div>
+            <div class="form-group">
+              <label>Doctor/Provider:</label>
+              <input type="text" id="appointmentDoctor" placeholder="Dr. John Smith">
             </div>
+            <div class="form-group">
+              <label>Appointment Date & Time:</label>
+              <input type="datetime-local" id="appointmentDateTime">
+            </div>
+            <div class="form-group">
+              <label>Type of Visit:</label>
+              <select id="appointmentType">
+                <option value="checkup">Regular Checkup</option>
+                <option value="followup">Follow-up</option>
+                <option value="consultation">Consultation</option>
+                <option value="specialist">Specialist</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Location/Address:</label>
+              <input type="text" id="appointmentLocation" placeholder="123 Medical Center Dr">
+            </div>
+            <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(appointmentsHTML, 'bot');
+        setTimeout(() => {
+          loadAppointments();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.addAppointment = function() {
+        const doctor = document.getElementById('appointmentDoctor').value;
+        const dateTime = document.getElementById('appointmentDateTime').value;
+        const type = document.getElementById('appointmentType').value;
+        const location = document.getElementById('appointmentLocation').value;
+
+        if (doctor && dateTime) {
+          const appointments = getFromLocal('appointments');
+          const newAppointment = {
+            id: Date.now(),
+            doctor,
+            dateTime,
+            type,
+            location,
+            status: 'scheduled',
+            created: new Date().toISOString()
+          };
+
+          appointments.push(newAppointment);
+          saveToLocal('appointments', appointments);
+
+          document.getElementById('appointmentDoctor').value = '';
+          document.getElementById('appointmentDateTime').value = '';
+          document.getElementById('appointmentLocation').value = '';
+
+          showSuccessMessage('✅ Appointment scheduled!');
+          loadAppointments();
+        }
+      }
+
+      function loadAppointments() {
+        const appointments = getFromLocal('appointments');
+        const listElement = document.getElementById('appointmentsList');
+        if (listElement) {
+          listElement.innerHTML = appointments.map(appointment => {
+            const appointmentDate = new Date(appointment.dateTime);
+            return `
+              <div class="appointment-item">
+                <div class="appointment-doctor">${appointment.doctor}</div>
+                <div class="appointment-type">${appointment.type}</div>
+                <div class="appointment-datetime">
+                  📅 ${appointmentDate.toLocaleDateString()} at ${appointmentDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </div>
+                ${appointment.location ? `<div class="appointment-location">📍 ${appointment.location}</div>` : ''}
+              </div>
+            `;
+          }).join('') || '<p style="text-align: center; color: #666; padding: 1rem;">No appointments scheduled.</p>';
+        }
+      }
+
+      // Medications Functions
+      window.showMedications = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble('Medications', 'user');
+        const medicationsHTML = `
+          <div class="form-container">
+            <h3>My Medications</h3>
+            <div id="medicationsList"></div>
+            <div class="form-group">
+              <label>Medication Name:</label>
+              <input type="text" id="medName" placeholder="Lisinopril, Metformin, etc.">
+            </div>
+            <div class="form-group">
+              <label>Dosage:</label>
+              <input type="text" id="medDosage" placeholder="10mg, 500mg, etc.">
+            </div>
+            <div class="form-group">
+              <label>Times Per Day:</label>
+              <select id="medTimesPerDay">
+                <option value="1">1 time per day</option>
+                <option value="2">2 times per day</option>
+                <option value="3">3 times per day</option>
+                <option value="As needed">As needed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Prescribed By:</label>
+              <input type="text" id="medPrescribedBy" placeholder="Dr. Smith">
+            </div>
+            <button class="btn" onclick="addMedication()">💊 Save Medication</button>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(medicationsHTML, 'bot');
+        setTimeout(() => {
+          loadMedications();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.addMedication = function() {
+        const name = document.getElementById('medName').value;
+        const dosage = document.getElementById('medDosage').value;
+        const timesPerDay = document.getElementById('medTimesPerDay').value;
+        const prescribedBy = document.getElementById('medPrescribedBy').value;
+
+        if (name && dosage) {
+          const medications = getFromLocal('medications');
+          const newMedication = {
+            id: Date.now(),
+            name,
+            dosage,
+            timesPerDay,
+            prescribedBy,
+            active: true,
+            created: new Date().toISOString()
+          };
+
+          medications.push(newMedication);
+          saveToLocal('medications', medications);
+
+          document.getElementById('medName').value = '';
+          document.getElementById('medDosage').value = '';
+          document.getElementById('medPrescribedBy').value = '';
+
+          showSuccessMessage('✅ Medication added!');
+          loadMedications();
+        }
+      }
+
+      function loadMedications() {
+        const medications = getFromLocal('medications');
+        const listElement = document.getElementById('medicationsList');
+        
+        if (listElement) {
+          const activeMeds = medications.filter(med => med.active);
+          
+          if (activeMeds.length === 0) {
+            listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications tracked yet.</p>';
+            return;
+          }
+
+          listElement.innerHTML = `
+            <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">💊 Active Medications</h4>
+            ${activeMeds.map(med => {
+              const timesDisplay = med.timesPerDay + ' times daily';
+              
+              return `
+                <div class="medication-item info-item">
+                  <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                      <strong style="color: #17a2b8;">${med.name} ${med.dosage}</strong>
+                      <span class="medication-time">${timesDisplay}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #666;">
+                      ${med.prescribedBy ? `👨‍⚕️ ${med.prescribedBy}` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
           `;
         }
+      }
+
+      // Enhanced Health Tools Functions
+      window.showDrugChecker = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
         
-        // Pre-fill form if data exists
-        if (emergencyInfo.contactName) {
-          document.getElementById('emergencyContactName').value = emergencyInfo.contactName || '';
-          document.getElementById('emergencyContactPhone').value = emergencyInfo.contactPhone || '';
-          document.getElementById('emergencyAllergies').value = emergencyInfo.allergies || '';
-          document.getElementById('emergencyConditions').value = emergencyInfo.conditions || '';
+        addBubble('Drug Checker', 'user');
+        const drugCheckerHTML = `
+          <div class="form-container">
+            <h3>💊 Drug Interaction Checker</h3>
+            <div id="currentMedicationsCheck"></div>
+            <div class="form-group">
+              <label>Add Medication to Check:</label>
+              <input type="text" id="newDrugName" placeholder="Enter medication name">
+            </div>
+            <button class="btn" onclick="checkDrugInteractions()">🔍 Check Interactions</button>
+            <div id="interactionResults" style="margin-top: 1rem;"></div>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(drugCheckerHTML, 'bot');
+        setTimeout(() => {
+          loadCurrentMedicationsForCheck();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.showHealthTracker = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble('Health Tracker', 'user');
+        const trackerHTML = `
+          <div class="form-container">
+            <h3>📊 Health Tracker</h3>
+            <div id="healthStats"></div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+              <h4 style="color: #28a745; margin-bottom: 0.8rem;">📈 Add New Reading</h4>
+              <div class="form-group">
+                <label>Measurement Type:</label>
+                <select id="measurementType">
+                  <option value="blood_pressure">Blood Pressure</option>
+                  <option value="blood_sugar">Blood Sugar</option>
+                  <option value="weight">Weight</option>
+                  <option value="heart_rate">Heart Rate</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Value:</label>
+                <input type="text" id="measurementValue" placeholder="e.g., 120/80, 95, 150 lbs, 72 bpm">
+              </div>
+              <div class="form-group">
+                <label>Date & Time:</label>
+                <input type="datetime-local" id="measurementDateTime">
+              </div>
+              <button class="btn" onclick="addHealthMeasurement()">📊 Add Reading</button>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(trackerHTML, 'bot');
+        setTimeout(() => {
+          loadHealthStats();
+          setCurrentDateTime('measurementDateTime');
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.showReminders = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble('Reminders', 'user');
+        const remindersHTML = `
+          <div class="form-container">
+            <h3>⏰ Medication Reminders</h3>
+            <div id="activeReminders"></div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+              <h4 style="color: #28a745; margin-bottom: 0.8rem;">➕ Set New Reminder</h4>
+              <div class="form-group">
+                <label>Medication:</label>
+                <input type="text" id="reminderMedication" placeholder="Medication name">
+              </div>
+              <div class="form-group">
+                <label>Time:</label>
+                <input type="time" id="reminderTime">
+              </div>
+              <div class="form-group">
+                <label>Frequency:</label>
+                <select id="reminderFrequency">
+                  <option value="daily">Daily</option>
+                  <option value="twice_daily">Twice Daily</option>
+                  <option value="three_times">Three Times Daily</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+              <button class="btn" onclick="addReminder()">⏰ Set Reminder</button>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(remindersHTML, 'bot');
+        setTimeout(() => {
+          loadActiveReminders();
+          isProcessing = false;
+        }, 500);
+      }
+
+      window.showEmergencyInfo = function() {
+        if (isProcessing) return;
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble('Emergency', 'user');
+        const emergencyHTML = `
+          <div class="form-container">
+            <h3>🚨 Emergency Information</h3>
+            <div id="emergencyDisplay"></div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+              <h4 style="color: #dc3545; margin-bottom: 0.8rem;">🆘 Update Emergency Info</h4>
+              <div class="form-group">
+                <label>Emergency Contact Name:</label>
+                <input type="text" id="emergencyContactName" placeholder="John Smith">
+              </div>
+              <div class="form-group">
+                <label>Emergency Contact Phone:</label>
+                <input type="tel" id="emergencyContactPhone" placeholder="(555) 123-4567">
+              </div>
+              <div class="form-group">
+                <label>Medical Allergies:</label>
+                <textarea id="emergencyAllergies" placeholder="Penicillin, shellfish, etc."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Critical Medical Conditions:</label>
+                <textarea id="emergencyConditions" placeholder="Diabetes, heart condition, etc."></textarea>
+              </div>
+              <button class="btn" onclick="saveEmergencyInfo()">🆘 Save Emergency Info</button>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="btn-home" onclick="goHome()">🏠 Back to Home</button>
+            </div>
+          </div>`;
+
+        addBubble(emergencyHTML, 'bot');
+        setTimeout(() => {
+          loadEmergencyInfo();
+          isProcessing = false;
+        }, 500);
+      }
+
+      // Utility functions
+      window.openVideo = function(videoUrl) {
+        // Open any video URL in a new tab/window
+        if (videoUrl) {
+          window.open(videoUrl, '_blank');
         }
       }
-    }
 
-    function saveEmergencyInfo() {
-      const emergencyInfo = {
-        contactName: document.getElementById('emergencyContactName').value,
-        contactPhone: document.getElementById('emergencyContactPhone').value,
-        allergies: document.getElementById('emergencyAllergies').value,
-        conditions: document.getElementById('emergencyConditions').value,
-        updated: new Date().toISOString()
-      };
+      window.toggleLanguage = toggleLanguage;
 
-      saveToLocal('emergencyInfo', emergencyInfo);
-      showSuccessMessage('🆘 Emergency information saved!');
-      loadEmergencyInfo();
-    }
-
-    function setCurrentDateTime(elementId) {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      
-      const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.value = dateTimeString;
+      function showSuccessMessage(message) {
+        const tempMessage = document.createElement('div');
+        tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        tempMessage.textContent = message;
+        document.body.appendChild(tempMessage);
+        
+        setTimeout(() => {
+          if (document.body.contains(tempMessage)) {
+            document.body.removeChild(tempMessage);
+          }
+        }, 2000);
       }
+
+      function showErrorMessage(message) {
+        const tempMessage = document.createElement('div');
+        tempMessage.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #dc3545; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        tempMessage.textContent = message;
+        document.body.appendChild(tempMessage);
+        
+        setTimeout(() => {
+          if (document.body.contains(tempMessage)) {
+            document.body.removeChild(tempMessage);
+          }
+        }, 2000);
+      }
+
+      // Enhanced Logic Support Functions
+      function loadCurrentMedicationsForCheck() {
+        const medications = getFromLocal('medications');
+        const activeMeds = medications.filter(med => med.active);
+        const displayElement = document.getElementById('currentMedicationsCheck');
+        
+        if (displayElement) {
+          if (activeMeds.length === 0) {
+            displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medications found. Add medications in "My Info" or "Medications" section first.</p>';
+          } else {
+            displayElement.innerHTML = `
+              <h4 style="color: #17a2b8; margin-bottom: 0.5rem;">Current Medications:</h4>
+              ${activeMeds.map(med => `
+                <div class="info-item">
+                  <strong>${med.name} ${med.dosage}</strong> - ${med.timesPerDay} times daily
+                </div>
+              `).join('')}
+            `;
+          }
+        }
+      }
+
+      window.checkDrugInteractions = function() {
+        const newDrug = document.getElementById('newDrugName').value.toLowerCase();
+        const medications = getFromLocal('medications');
+        const activeMeds = medications.filter(med => med.active);
+        const resultsElement = document.getElementById('interactionResults');
+        
+        if (!newDrug) {
+          showErrorMessage('Please enter a medication name');
+          return;
+        }
+
+        // Basic drug interaction database (simplified)
+        const interactions = {
+          'warfarin': ['aspirin', 'ibuprofen', 'simvastatin', 'metformin'],
+          'aspirin': ['warfarin', 'lisinopril', 'metformin'],
+          'ibuprofen': ['warfarin', 'lisinopril', 'losartan', 'metoprolol'],
+          'lisinopril': ['potassium', 'ibuprofen', 'aspirin'],
+          'metformin': ['alcohol', 'warfarin', 'contrast dye'],
+          'simvastatin': ['grapefruit', 'warfarin', 'gemfibrozil'],
+          'losartan': ['potassium', 'ibuprofen', 'naproxen'],
+          'albuterol': ['propranolol', 'metoprolol', 'atenolol']
+        };
+
+        let foundInteractions = [];
+        
+        activeMeds.forEach(med => {
+          const medName = med.name.toLowerCase();
+          if (interactions[newDrug] && interactions[newDrug].includes(medName)) {
+            foundInteractions.push(`⚠️ ${newDrug.toUpperCase()} may interact with ${med.name}`);
+          }
+          if (interactions[medName] && interactions[medName].includes(newDrug)) {
+            foundInteractions.push(`⚠️ ${med.name} may interact with ${newDrug.toUpperCase()}`);
+          }
+        });
+
+        if (resultsElement) {
+          if (foundInteractions.length === 0) {
+            resultsElement.innerHTML = `
+              <div class="info-section">
+                <h4>✅ No Known Interactions Found</h4>
+                <p>No major interactions detected between ${newDrug.toUpperCase()} and your current medications.</p>
+                <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                  *Always consult your healthcare provider before starting new medications.
+                </p>
+              </div>
+            `;
+          } else {
+            resultsElement.innerHTML = `
+              <div class="info-section" style="border-left-color: #dc3545;">
+                <h4 style="color: #dc3545;">⚠️ Potential Interactions Found</h4>
+                ${foundInteractions.map(interaction => `<div class="info-item" style="border-left-color: #dc3545;">${interaction}</div>`).join('')}
+                <p style="font-size: 0.8rem; color: #dc3545; margin-top: 0.5rem; font-weight: 600;">
+                  **IMPORTANT: Contact your healthcare provider immediately before taking ${newDrug.toUpperCase()}**
+                </p>
+              </div>
+            `;
+          }
+        }
+
+        document.getElementById('newDrugName').value = '';
+      }
+
+      function loadHealthStats() {
+        const measurements = getFromLocal('healthMeasurements');
+        const displayElement = document.getElementById('healthStats');
+        
+        if (displayElement) {
+          if (measurements.length === 0) {
+            displayElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No health measurements recorded yet.</p>';
+            return;
+          }
+
+          // Group by type and show latest readings
+          const byType = {};
+          measurements.forEach(measurement => {
+            if (!byType[measurement.type]) {
+              byType[measurement.type] = [];
+            }
+            byType[measurement.type].push(measurement);
+          });
+
+          // Sort each type by date and get latest
+          Object.keys(byType).forEach(type => {
+            byType[type].sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+          });
+
+          displayElement.innerHTML = `
+            <h4 style="color: #28a745; margin-bottom: 0.5rem;">📈 Latest Readings</h4>
+            ${Object.keys(byType).map(type => {
+              const latest = byType[type][0];
+              const typeNames = {
+                'blood_pressure': '🩺 Blood Pressure',
+                'blood_sugar': '🩸 Blood Sugar',
+                'weight': '⚖️ Weight',
+                'heart_rate': '💓 Heart Rate'
+              };
+              return `
+                <div class="info-item">
+                  <div>
+                    <strong>${typeNames[type] || type}</strong><br>
+                    <span style="font-size: 1.1rem; color: #28a745; font-weight: 600;">${latest.value}</span><br>
+                    <small style="color: #666;">${new Date(latest.dateTime).toLocaleDateString()} at ${new Date(latest.dateTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                  </div>
+                  <span style="color: #666; font-size: 0.8rem;">${byType[type].length} readings</span>
+                </div>
+              `;
+            }).join('')}
+          `;
+        }
+      }
+
+      window.addHealthMeasurement = function() {
+        const type = document.getElementById('measurementType').value;
+        const value = document.getElementById('measurementValue').value;
+        const dateTime = document.getElementById('measurementDateTime').value;
+
+        if (type && value && dateTime) {
+          const measurements = getFromLocal('healthMeasurements');
+          const newMeasurement = {
+            id: Date.now(),
+            type,
+            value,
+            dateTime,
+            created: new Date().toISOString()
+          };
+
+          measurements.push(newMeasurement);
+          saveToLocal('healthMeasurements', measurements);
+
+          document.getElementById('measurementValue').value = '';
+          setCurrentDateTime('measurementDateTime');
+
+          showSuccessMessage('✅ Health measurement recorded!');
+          loadHealthStats();
+        } else {
+          showErrorMessage('Please fill in all fields');
+        }
+      }
+
+      function loadActiveReminders() {
+        const reminders = getFromLocal('reminders');
+        const listElement = document.getElementById('activeReminders');
+        
+        if (listElement) {
+          if (reminders.length === 0) {
+            listElement.innerHTML = '<p style="text-align: center; color: #666; padding: 1rem;">No medication reminders set.</p>';
+            return;
+          }
+
+          listElement.innerHTML = `
+            <h4 style="color: #28a745; margin-bottom: 0.5rem;">⏰ Active Reminders</h4>
+            ${reminders.map(reminder => {
+              const frequencyText = {
+                'daily': 'Daily',
+                'twice_daily': 'Twice Daily',
+                'three_times': '3 Times Daily',
+                'weekly': 'Weekly'
+              };
+              
+              return `
+                <div class="info-item">
+                  <div>
+                    <strong>${reminder.medication}</strong><br>
+                    <span style="color: #28a745;">🕐 ${reminder.time}</span> - ${frequencyText[reminder.frequency]}
+                  </div>
+                  <button class="btn-secondary" onclick="deleteReminder(${reminder.id})" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">Delete</button>
+                </div>
+              `;
+            }).join('')}
+          `;
+        }
+      }
+
+      window.addReminder = function() {
+        const medication = document.getElementById('reminderMedication').value;
+        const time = document.getElementById('reminderTime').value;
+        const frequency = document.getElementById('reminderFrequency').value;
+
+        if (medication && time) {
+          const reminders = getFromLocal('reminders');
+          const newReminder = {
+            id: Date.now(),
+            medication,
+            time,
+            frequency,
+            active: true,
+            created: new Date().toISOString()
+          };
+
+          reminders.push(newReminder);
+          saveToLocal('reminders', reminders);
+
+          document.getElementById('reminderMedication').value = '';
+          document.getElementById('reminderTime').value = '';
+
+          showSuccessMessage('⏰ Reminder set successfully!');
+          loadActiveReminders();
+        } else {
+          showErrorMessage('Please enter medication name and time');
+        }
+      }
+
+      window.deleteReminder = function(id) {
+        const reminders = getFromLocal('reminders');
+        const updatedReminders = reminders.filter(reminder => reminder.id !== id);
+        saveToLocal('reminders', updatedReminders);
+        showSuccessMessage('Reminder deleted');
+        loadActiveReminders();
+      }
+
+      function loadEmergencyInfo() {
+        const emergencyInfo = getFromLocal('emergencyInfo');
+        const displayElement = document.getElementById('emergencyDisplay');
+        
+        if (displayElement) {
+          if (Object.keys(emergencyInfo).length === 0) {
+            displayElement.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 1rem; font-weight: 600;">⚠️ No emergency information on file. Please complete below.</p>';
+          } else {
+            displayElement.innerHTML = `
+              <div class="info-section" style="border-left-color: #dc3545;">
+                <h4 style="color: #dc3545;">🆘 Emergency Contact</h4>
+                ${emergencyInfo.contactName ? `<div class="info-item"><strong>Contact:</strong> ${emergencyInfo.contactName}</div>` : ''}
+                ${emergencyInfo.contactPhone ? `<div class="info-item"><strong>Phone:</strong> ${emergencyInfo.contactPhone}</div>` : ''}
+                ${emergencyInfo.allergies ? `<div class="info-item"><strong>Allergies:</strong><br>${emergencyInfo.allergies}</div>` : ''}
+                ${emergencyInfo.conditions ? `<div class="info-item"><strong>Critical Conditions:</strong><br>${emergencyInfo.conditions}</div>` : ''}
+              </div>
+            `;
+          }
+          
+          // Pre-fill form if data exists
+          if (emergencyInfo.contactName) {
+            document.getElementById('emergencyContactName').value = emergencyInfo.contactName || '';
+            document.getElementById('emergencyContactPhone').value = emergencyInfo.contactPhone || '';
+            document.getElementById('emergencyAllergies').value = emergencyInfo.allergies || '';
+            document.getElementById('emergencyConditions').value = emergencyInfo.conditions || '';
+          }
+        }
+      }
+
+      window.saveEmergencyInfo = function() {
+        const emergencyInfo = {
+          contactName: document.getElementById('emergencyContactName').value,
+          contactPhone: document.getElementById('emergencyContactPhone').value,
+          allergies: document.getElementById('emergencyAllergies').value,
+          conditions: document.getElementById('emergencyConditions').value,
+          updated: new Date().toISOString()
+        };
+
+        saveToLocal('emergencyInfo', emergencyInfo);
+        showSuccessMessage('🆘 Emergency information saved!');
+        loadEmergencyInfo();
+      }
+
+      function setCurrentDateTime(elementId) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.value = dateTimeString;
+        }
+      }
+
+      // Send message function
+      window.sendMessage = function(preset = null) {
+        if (isProcessing) return;
+
+        const text = preset || userInput.value.trim();
+        if (!text) return;
+
+        isProcessing = true;
+        clearAllChatMessages();
+        
+        addBubble(text, 'user');
+        userInput.value = '';
+
+        setTimeout(() => {
+          const response = getMedicalResponse(text);
+          addBubble(response, 'bot', true);
+          isProcessing = false;
+        }, 500);
+      }
+
+      // Enter key support
+      if (userInput) {
+        userInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') sendMessage();
+        });
+      }
+
+      console.log('InfoHealth AI app initialized with full features and drug interactions');
     }
 
-    // Send message function
-    function sendMessage(preset = null) {
-      if (isProcessing) return;
-
-      const text = preset || userInput.value.trim();
-      if (!text) return;
-
-      isProcessing = true;
-      clearAllChatMessages();
-      
-      addBubble(text, 'user');
-      userInput.value = '';
-
-      setTimeout(() => {
-        const response = getMedicalResponse(text);
-        addBubble(response, 'bot', true);
-        isProcessing = false;
-      }, 500);
+    // If DOM is already loaded, initialize immediately
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
     }
-
-    // Enter key support
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    console.log('InfoHealth AI app initialized with full features and drug interactions');
   </script>
 </body>
 </html>
